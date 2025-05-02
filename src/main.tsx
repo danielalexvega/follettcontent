@@ -13,7 +13,6 @@ import ArticlesListingPage from "./pages/ArticlesListingPage.tsx";
 import ArticleDetailPage from "./pages/ArticleDetailPage.tsx";
 import OurTeamPage from "./pages/OurTeamPage.tsx";
 import PersonDetailPage from "./pages/PersonDetailPage.tsx";
-import Auth0ProviderWithRedirect from "./components/auth/AuthProviderWithRedirect.tsx";
 import { ErrorBoundary } from "react-error-boundary";
 import Loader from "./components/Loader.tsx";
 
@@ -71,25 +70,23 @@ const router = createBrowserRouter([
   {
     path: "/envid/:envId",
     element: (
-      <Auth0ProviderWithRedirect>
-        <ErrorBoundary
-          fallbackRender={({ error }) => (
-            <div>
-              There was an error! <pre>{error.message}</pre>
+      <ErrorBoundary
+        fallbackRender={({ error }) => (
+          <div>
+            There was an error! <pre>{error.message}</pre>
+          </div>
+        )}
+      >
+        <Suspense
+          fallback={
+            <div className="flex w-screen h-screen justify-center">
+              <Loader />
             </div>
-          )}
+          }
         >
-          <Suspense
-            fallback={
-              <div className="flex w-screen h-screen justify-center">
-                <Loader />
-              </div>
-            }
-          >
-            <Layout />
-          </Suspense>
-        </ErrorBoundary>
-      </Auth0ProviderWithRedirect>
+          <Layout />
+        </Suspense>
+      </ErrorBoundary>
     ),
     children: BaseRouting.map(p => ({
       path: `envid/:envId/${p.path}`,
