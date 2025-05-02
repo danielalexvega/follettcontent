@@ -5,11 +5,13 @@ import { useParams } from "react-router-dom";
 type AppContext = {
   environmentId: string;
   apiKey: string;
+  collection: string;
 };
 
 const defaultAppContext: AppContext = {
   environmentId: import.meta.env.VITE_ENVIRONMENT_ID!,
   apiKey: import.meta.env.VITE_DELIVERY_API_KEY!,
+  collection: import.meta.env.VITE_COLLECTION!,
 };
 
 const AppContext = createContext<AppContext>(defaultAppContext);
