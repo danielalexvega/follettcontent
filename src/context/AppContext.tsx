@@ -30,6 +30,7 @@ export const AppContextComponent: FC<PropsWithChildren> = ({ children }) => {
       return {
         environmentId: envId,
         apiKey: import.meta.env.VITE_DELIVERY_API_KEY!,
+        collection: import.meta.env.VITE_COLLECTION!,
       };
     },
   });
