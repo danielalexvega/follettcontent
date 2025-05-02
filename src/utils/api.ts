@@ -1,10 +1,5 @@
 import { get, post, RequestContext } from "./fetch";
 
-type LoadPreviewApiKeyDeps = Readonly<{
-  accessToken: string;
-  environmentId: string;
-}>;
-
 type ProjectContainer = Readonly<{
   projectContainerId: string;
 }>;
@@ -16,27 +11,6 @@ type TokenSeedResponse = Readonly<{
 type KeyFromSeedResponse = Readonly<{
   api_key: string;
 }>;
-
-export const loadPreviewApiKey = async ({ accessToken, environmentId }: LoadPreviewApiKeyDeps) => {
-  const projectContainerId = await getProjectContainerForEnvironment(accessToken, environmentId)
-    .then(res => res?.projectContainerId);
-
-  if (!projectContainerId) {
-    return null;
-  }
-
-  const tokenSeed = await getPreviewApiTokenSeed(accessToken, projectContainerId, environmentId).then(res =>
-    res?.[0]?.token_seed_id
-  );
-
-  if (!tokenSeed) {
-    return null;
-  }
-
-  return getKeyForTokenSeed(accessToken, projectContainerId, tokenSeed)
-    .then(response => response.api_key)
-    .catch(() => null);
-};
 
 export const getProjectContainerForEnvironment = (
   authToken: string,
