@@ -17,9 +17,7 @@ const AppContext = createContext<AppContext>(defaultAppContext);
 export const useAppContext = () => useContext(AppContext);
 
 export const AppContextComponent: FC<PropsWithChildren> = ({ children }) => {
-  console.log('key', import.meta.env.VITE_DELIVERY_API_KEY);
   const { envId } = useParams();
-  console.log('envId', envId);
 
   const contextData = useSuspenseQuery({
     queryKey: [`env-data${envId ? `-${envId}` : ""}`],
