@@ -12,8 +12,8 @@ import { useAppContext } from "../context/AppContext";
 import { Replace } from "../utils/types";
 import FeaturedContent from "../components/landingPage/FeaturedContent";
 import { useSearchParams } from "react-router-dom";
-import { useCustomRefresh } from "../context/SmartLinkContext";
-import { IRefreshMessageData, IRefreshMessageMetadata } from "@kontent-ai/smart-link";
+import { useCustomRefresh, useLivePreview } from "../context/SmartLinkContext";
+import { IRefreshMessageData, IRefreshMessageMetadata, IUpdateMessageData, applyUpdateOnItem } from "@kontent-ai/smart-link";
 
 const LandingPage: FC = () => {
   const { environmentId, apiKey } = useAppContext();
@@ -46,18 +46,17 @@ const LandingPage: FC = () => {
     ],
   });
 
-  const onRefresh = useCallback(
-    (_: IRefreshMessageData, metadata: IRefreshMessageMetadata, originalRefresh: () => void) => {
-      if (metadata.manualRefresh) {
-        originalRefresh();
-      } else {
+  const onUpdate = useCallback(
+    (data: IUpdateMessageData) => {
+      if (landingPage.data) {
+        applyUpdateOnItem(landingPage.data, data);
         landingPage.refetch();
       }
     },
     [landingPage],
   );
 
-  useCustomRefresh(onRefresh);
+  useLivePreview(onUpdate);
 
   if (!landingPage.data || !Object.entries(landingPage.data.elements).length) {
     return <div className="flex-grow" />;
