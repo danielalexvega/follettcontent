@@ -132,6 +132,7 @@ const ServiceDetail: React.FC = () => {
     },
     [refetch],
   );
+  
   useCustomRefresh(onRefresh);
 
   if (!service) {
