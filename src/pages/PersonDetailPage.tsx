@@ -35,6 +35,7 @@ const usePersona = (slug: string | undefined, isPreview: boolean, lang: string |
   }, [persona, environmentId, apiKey, isPreview]);
 
   useEffect(() => {
+    console.log("slug", slug);
     if (slug) {
       createClient(environmentId, apiKey, isPreview)
         .item<Person>(slug ?? "")
@@ -42,6 +43,7 @@ const usePersona = (slug: string | undefined, isPreview: boolean, lang: string |
         .toPromise()
         .then((res) => {
           const item = res.data.item;
+          console.log("item", item);
           if (item) {
             setPersona(item);
           } else {
@@ -70,7 +72,7 @@ const PersonDetailPage: React.FC = () => {
 
   const lang = searchParams.get("lang");
 
-  const persona = usePersona(`person-detail_${slug}`, isPreview, lang);
+  const persona = usePersona(slug, isPreview, lang);
 
   if (!persona) {
     return <div className="flex-grow" />;
