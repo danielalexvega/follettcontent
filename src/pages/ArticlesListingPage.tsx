@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import PageSection from "../components/PageSection";
 import { useAppContext } from "../context/AppContext";
 import { createClient } from "../utils/client";
@@ -9,13 +9,14 @@ import { useSearchParams } from "react-router-dom";
 import { defaultPortableRichTextResolvers, isEmptyRichText } from "../utils/richtext";
 import { PortableText } from "@portabletext/react";
 import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
-import { IUpdateMessageData, applyUpdateOnItemAndLoadLinkedItems } from "@kontent-ai/smart-link";
-import { useLivePreview } from "../context/SmartLinkContext";
+import { IUpdateMessageData, IRefreshMessageData, IRefreshMessageMetadata, applyUpdateOnItemAndLoadLinkedItems } from "@kontent-ai/smart-link";
+import { useLivePreview, useCustomRefresh } from "../context/SmartLinkContext";
 import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
 import Selector, { SelectorOption } from "../components/Selector";
 import ImageWithTag from "../components/ImageWithTag";
 import Tags from "../components/Tags";
 import ButtonLink from "../components/ButtonLink";
+import { useQuery } from "@tanstack/react-query";
 
 type FeaturedArticleProps = Readonly<{
   image: {
@@ -59,11 +60,20 @@ const FeaturedArticle: React.FC<FeaturedArticleProps> = ({ image, title, publish
 
 const useArticlesListingPage = (isPreview: boolean, lang: string | null) => {
   const { environmentId, apiKey } = useAppContext();
-  const [page, setPage] = useState<Page | null>(null);
+  const { data: page, refetch } = useQuery({
+    queryKey: ['articles-listing-page', lang, isPreview],
+    queryFn: async () => {
+      const client = createClient(environmentId, apiKey, isPreview);
+      const response = await client
+        .item<Page>("research")
+        .languageParameter((lang ?? "default") as LanguageCodenames)
+        .toPromise();
+      return response.data.item;
+    },
+  });
 
   const handleLiveUpdate = useCallback((data: IUpdateMessageData) => {
     if (page && data.item.codename === page.system.codename) {
-      // Use applyUpdateOnItemAndLoadLinkedItems to ensure all linked content is updated
       applyUpdateOnItemAndLoadLinkedItems(
         page,
         data,
@@ -74,44 +84,49 @@ const useArticlesListingPage = (isPreview: boolean, lang: string | null) => {
           .then(res => res.data.items)
       ).then((updatedItem) => {
         if (updatedItem) {
-          setPage(updatedItem as Page);
+          refetch();
         }
       });
     }
-  }, [page, environmentId, apiKey, isPreview]);
-
-  useEffect(() => {
-    createClient(environmentId, apiKey, isPreview)
-      .item<Page>("research")
-      .languageParameter((lang ?? "default") as LanguageCodenames)
-      .toPromise()
-      .then(res => {
-        setPage(res.data.item);
-      })
-      .catch((err) => {
-        if (err instanceof DeliveryError) {
-          setPage(null);
-        } else {
-          throw err;
-        }
-      });
-  }, [environmentId, apiKey, isPreview, lang]);
+  }, [page, environmentId, apiKey, isPreview, refetch]);
 
   useLivePreview(handleLiveUpdate);
+
+  const onRefresh = useCallback(
+    (_: IRefreshMessageData, metadata: IRefreshMessageMetadata, originalRefresh: () => void) => {
+      if (metadata.manualRefresh) {
+        originalRefresh();
+      } else {
+        refetch();
+      }
+    },
+    [refetch],
+  );
+  
+  useCustomRefresh(onRefresh);
 
   return page;
 };
 
 const useArticles = (isPreview: boolean, lang: string | null) => {
   const { environmentId, apiKey } = useAppContext();
-  const [articles, setArticles] = useState<Article[]>([]);
+  const { data: articles, refetch } = useQuery({
+    queryKey: ['articles', lang, isPreview],
+    queryFn: async () => {
+      const client = createClient(environmentId, apiKey, isPreview);
+      const response = await client
+        .items<Article>()
+        .type("article")
+        .languageParameter((lang ?? "default") as LanguageCodenames)
+        .toPromise();
+      return response.data.items;
+    },
+  });
 
   const handleLiveUpdate = useCallback((data: IUpdateMessageData) => {
-    // Update the specific article in the list
-    setArticles(prevArticles => {
-      return prevArticles.map(article => {
+    if (articles) {
+      const updatedArticles = articles.map(article => {
         if (article.system.codename === data.item.codename) {
-          // Apply the update and handle the Promise
           applyUpdateOnItemAndLoadLinkedItems(
             article,
             data,
@@ -122,85 +137,86 @@ const useArticles = (isPreview: boolean, lang: string | null) => {
               .then(res => res.data.items)
           ).then((updatedItem) => {
             if (updatedItem) {
-              setArticles(prev => prev.map(a =>
-                a.system.codename === data.item.codename ? updatedItem as Article : a
-              ));
+              refetch();
             }
           });
-          return article; // Return the current article while waiting for the update
         }
         return article;
       });
-    });
-  }, [environmentId, apiKey, isPreview]);
-
-  useEffect(() => {
-    createClient(environmentId, apiKey, isPreview)
-      .items<Article>()
-      .type("article")
-      .languageParameter((lang ?? "default") as LanguageCodenames)
-      .toPromise()
-      .then(res => {
-        setArticles(res.data.items);
-      })
-      .catch((err) => {
-        if (err instanceof DeliveryError) {
-          setArticles([]);
-        } else {
-          throw err;
-        }
-      });
-  }, [environmentId, apiKey, isPreview, lang]);
+    }
+  }, [articles, environmentId, apiKey, isPreview, refetch]);
 
   useLivePreview(handleLiveUpdate);
 
-  return articles;
+  const onRefresh = useCallback(
+    (_: IRefreshMessageData, metadata: IRefreshMessageMetadata, originalRefresh: () => void) => {
+      if (metadata.manualRefresh) {
+        originalRefresh();
+      } else {
+        refetch();
+      }
+    },
+    [refetch],
+  );
+  useCustomRefresh(onRefresh);
+
+  return articles ?? [];
 };
 
 const useArticleTypes = (isPreview: boolean) => {
   const { environmentId, apiKey } = useAppContext();
-  const [types, setTypes] = useState<{ terms: ITaxonomyTerms[] }>({ terms: [] });
+  const { data: types, refetch } = useQuery({
+    queryKey: ['article-types', isPreview],
+    queryFn: async () => {
+      const client = createClient(environmentId, apiKey, isPreview);
+      const response = await client
+        .taxonomy("article_type")
+        .toPromise();
+      return response.data.taxonomy;
+    },
+  });
 
-  useEffect(() => {
-    createClient(environmentId, apiKey, isPreview)
-      .taxonomy("article_type")
-      .toPromise()
-      .then(res => {
-        setTypes(res.data.taxonomy);
-      })
-      .catch((err) => {
-        if (err instanceof DeliveryError) {
-          setTypes({ terms: [] });
-        } else {
-          throw err;
-        }
-      });
-  }, [environmentId, apiKey, isPreview]);
+  const onRefresh = useCallback(
+    (_: IRefreshMessageData, metadata: IRefreshMessageMetadata, originalRefresh: () => void) => {
+      if (metadata.manualRefresh) {
+        originalRefresh();
+      } else {
+        refetch();
+      }
+    },
+    [refetch],
+  );
+  useCustomRefresh(onRefresh);
 
-  return types;
+  return types ?? { terms: [] };
 };
 
 const useArticleTopics = (isPreview: boolean) => {
   const { environmentId, apiKey } = useAppContext();
-  const [topics, setTopics] = useState<{ terms: ITaxonomyTerms[] }>({ terms: [] });
+  const { data: topics, refetch } = useQuery({
+    queryKey: ['article-topics', isPreview],
+    queryFn: async () => {
+      const client = createClient(environmentId, apiKey, isPreview);
+      const response = await client
+        .taxonomy("general_healthcare_topics")
+        .toPromise();
+      return response.data.taxonomy;
+    },
+  });
 
-  useEffect(() => {
-    createClient(environmentId, apiKey, isPreview)
-      .taxonomy("general_healthcare_topics")
-      .toPromise()
-      .then(res => {
-        setTopics(res.data.taxonomy);
-      })
-      .catch((err) => {
-        if (err instanceof DeliveryError) {
-          setTopics({ terms: [] });
-        } else {
-          throw err;
-        }
-      });
-  }, [environmentId, apiKey, isPreview]);
+  const onRefresh = useCallback(
+    (_: IRefreshMessageData, metadata: IRefreshMessageMetadata, originalRefresh: () => void) => {
+      if (metadata.manualRefresh) {
+        originalRefresh();
+      } else {
+        refetch();
+      }
+    },
+    [refetch],
+  );
+  useCustomRefresh(onRefresh);
 
-  return topics;
+  return topics ?? { terms: [] };
 };
 
 const ArticlesListingPage: React.FC = () => {

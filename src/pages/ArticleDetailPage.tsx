@@ -12,10 +12,11 @@ import { NavLink } from "react-router";
 import PersonCard from "../components/PersonCard";
 import ArticleList from "../components/articles/ArticleList";
 import { createPreviewLink } from "../utils/link";
-import { IRefreshMessageData, IRefreshMessageMetadata } from "@kontent-ai/smart-link";
-import { useCustomRefresh } from "../context/SmartLinkContext";
+import { IRefreshMessageData, IRefreshMessageMetadata, IUpdateMessageData, applyUpdateOnItemAndLoadLinkedItems } from "@kontent-ai/smart-link";
+import { useCustomRefresh, useLivePreview } from "../context/SmartLinkContext";
 import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { DeliveryError } from "@kontent-ai/delivery-sdk";
 
 const HeroImageAuthorCard: React.FC<{
   prefix?: string;
@@ -64,33 +65,61 @@ const ArticleDetailPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get("preview") === "true";
   const lang = searchParams.get("lang");
+  const queryClient = useQueryClient();
 
   const { data: article, refetch } = useQuery({
-    queryKey: ["article-detail", slug, lang],
+    queryKey: ["article-detail", slug, lang, isPreview],
     queryFn: async () => {
-      // First get the article by slug
-      const systemResponse = await createClient(environmentId, apiKey, isPreview)
-        .items<Article>()
-        .type("article")
-        .equalsFilter("elements.url_slug", slug ?? "")
-        .toPromise();
+      try {
+        // First get the article by slug
+        const systemResponse = await createClient(environmentId, apiKey, isPreview)
+          .items<Article>()
+          .type("article")
+          .equalsFilter("elements.url_slug", slug ?? "")
+          .toPromise();
 
-      const articleCodename = systemResponse.data.items[0]?.system.codename;
-      if (!articleCodename) return null;
+        const articleCodename = systemResponse.data.items[0]?.system.codename;
+        if (!articleCodename) return null;
 
-      // Then get the full article data with language
-      const articleResponse = await createClient(environmentId, apiKey, isPreview)
-        .items<Article>()
-        .type("article")
-        .equalsFilter("system.codename", articleCodename)
-        .languageParameter((lang ?? "default") as LanguageCodenames)
-        .depthParameter(1)
-        .toPromise();
+        // Then get the full article data with language
+        const articleResponse = await createClient(environmentId, apiKey, isPreview)
+          .items<Article>()
+          .type("article")
+          .equalsFilter("system.codename", articleCodename)
+          .languageParameter((lang ?? "default") as LanguageCodenames)
+          .depthParameter(1)
+          .toPromise();
 
-      return articleResponse.data.items[0] ?? null;
+        return articleResponse.data.items[0] ?? null;
+      } catch (err) {
+        if (err instanceof DeliveryError) {
+          return null;
+        }
+        throw err;
+      }
     },
     enabled: !!slug,
   });
+
+  const handleLiveUpdate = useCallback((data: IUpdateMessageData) => {
+    if (article && data.item.codename === article.system.codename) {
+      applyUpdateOnItemAndLoadLinkedItems(
+        article,
+        data,
+        (codenamesToFetch: readonly string[]) => createClient(environmentId, apiKey, isPreview)
+          .items()
+          .inFilter("system.codename", [...codenamesToFetch])
+          .toPromise()
+          .then(res => res.data.items)
+      ).then((updatedItem) => {
+        if (updatedItem) {
+          queryClient.setQueryData(["article-detail", slug, lang, isPreview], updatedItem);
+        }
+      });
+    }
+  }, [article, environmentId, apiKey, isPreview, slug, lang, queryClient]);
+
+  useLivePreview(handleLiveUpdate);
 
   const onRefresh = useCallback(
     (_: IRefreshMessageData, metadata: IRefreshMessageMetadata, originalRefresh: () => void) => {
