@@ -1,22 +1,21 @@
 import React, { useCallback, useState, useEffect } from "react";
 import PageSection from "../components/PageSection";
 import { useAppContext } from "../context/AppContext";
-import { useSuspenseQueries } from "@tanstack/react-query";
 import { createClient } from "../utils/client";
-import { Page, Article, isArticleType, isGeneralHealthcareTopics, LanguageCodenames } from "../model";
-import { DeliveryError } from "@kontent-ai/delivery-sdk";
+import { DeliveryError, ITaxonomyTerms } from "@kontent-ai/delivery-sdk";
 import ArticleList from "../components/articles/ArticleList";
-import Selector, { SelectorOption } from "../components/Selector";
+import { Page, Article, isArticleType, isGeneralHealthcareTopics, LanguageCodenames } from "../model";
 import { useSearchParams } from "react-router-dom";
-import ImageWithTag from "../components/ImageWithTag";
-import Tags from "../components/Tags";
-import ButtonLink from "../components/ButtonLink";
+import { defaultPortableRichTextResolvers, isEmptyRichText } from "../utils/richtext";
 import { PortableText } from "@portabletext/react";
 import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
-import { defaultPortableRichTextResolvers, isEmptyRichText } from "../utils/richtext";
 import { IUpdateMessageData, applyUpdateOnItemAndLoadLinkedItems } from "@kontent-ai/smart-link";
 import { useLivePreview } from "../context/SmartLinkContext";
 import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
+import Selector, { SelectorOption } from "../components/Selector";
+import ImageWithTag from "../components/ImageWithTag";
+import Tags from "../components/Tags";
+import ButtonLink from "../components/ButtonLink";
 
 type FeaturedArticleProps = Readonly<{
   image: {
@@ -158,6 +157,52 @@ const useArticles = (isPreview: boolean, lang: string | null) => {
   return articles;
 };
 
+const useArticleTypes = (isPreview: boolean) => {
+  const { environmentId, apiKey } = useAppContext();
+  const [types, setTypes] = useState<{ terms: ITaxonomyTerms[] }>({ terms: [] });
+
+  useEffect(() => {
+    createClient(environmentId, apiKey, isPreview)
+      .taxonomy("article_type")
+      .toPromise()
+      .then(res => {
+        setTypes(res.data.taxonomy);
+      })
+      .catch((err) => {
+        if (err instanceof DeliveryError) {
+          setTypes({ terms: [] });
+        } else {
+          throw err;
+        }
+      });
+  }, [environmentId, apiKey, isPreview]);
+
+  return types;
+};
+
+const useArticleTopics = (isPreview: boolean) => {
+  const { environmentId, apiKey } = useAppContext();
+  const [topics, setTopics] = useState<{ terms: ITaxonomyTerms[] }>({ terms: [] });
+
+  useEffect(() => {
+    createClient(environmentId, apiKey, isPreview)
+      .taxonomy("general_healthcare_topics")
+      .toPromise()
+      .then(res => {
+        setTopics(res.data.taxonomy);
+      })
+      .catch((err) => {
+        if (err instanceof DeliveryError) {
+          setTopics({ terms: [] });
+        } else {
+          throw err;
+        }
+      });
+  }, [environmentId, apiKey, isPreview]);
+
+  return topics;
+};
+
 const ArticlesListingPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get("preview") === "true";
@@ -165,6 +210,8 @@ const ArticlesListingPage: React.FC = () => {
 
   const articlesListingPage = useArticlesListingPage(isPreview, lang);
   const articles = useArticles(isPreview, lang);
+  const articleTypes = useArticleTypes(isPreview);
+  const articleTopics = useArticleTopics(isPreview);
 
   const [articleType, setArticleType] = useState<string>("All");
   const [articleTopic, setArticleTopic] = useState<string>("All");
@@ -180,6 +227,7 @@ const ArticlesListingPage: React.FC = () => {
       searchParams.set("type", option.codename);
     }
   };
+
   const handleArticleTopicChange = (option: SelectorOption) => {
     setArticleTopic(option.label);
     if (option.label === "All") {
@@ -224,31 +272,7 @@ const ArticlesListingPage: React.FC = () => {
           </div>
         </div>
       </PageSection>
-      <PageSection color="bg-burgundy">
-        {featuredArticle && (
-          <div className="burgundy-theme">
-            <FeaturedArticle
-              image={{
-                url: featuredArticle.elements.image.value[0]?.url ?? "",
-                alt: featuredArticle.elements.image.value[0]?.description ?? "",
-                width: 670,
-                height: 440,
-              }}
-              title={featuredArticle.elements.title.value}
-              published={`Published on ${
-                new Date(featuredArticle.elements.publish_date.value ?? "").toLocaleDateString("en-US", {
-                  month: "short",
-                  year: "numeric",
-                  day: "numeric",
-                })
-              }`}
-              tags={featuredArticle.elements.topics.value.map(t => t.name)}
-              description={featuredArticle.elements.introduction.value}
-              urlSlug={featuredArticle.elements.url_slug.value}
-            />
-          </div>
-        )}
-      </PageSection>
+
       {!isEmptyRichText(articlesListingPage.elements.body.value) && (
         <PageSection color="bg-white">
           <div className="flex flex-col pt-10 mx-auto gap-6"
@@ -262,58 +286,80 @@ const ArticlesListingPage: React.FC = () => {
           </div>
         </PageSection>
       )}
-      <PageSection color="bg-white">
-        <div className="flex flex-row gap-6 pt-16">
-          <Selector
-            label="Article Type"
-            options={[
-              { label: "All", codename: "all" },
-              ...articlesTypes.data.terms.map(t => ({ label: t.name, codename: t.codename })),
-            ]}
-            selectedOption={articleType}
-            onChange={handleArticleTypeChange}
+
+      {featuredArticle && (
+        <PageSection color="bg-white">
+          <FeaturedArticle
+            image={{
+              url: featuredArticle.elements.image.value[0]?.url ?? "",
+              alt: featuredArticle.elements.image.value[0]?.description ?? featuredArticle.elements.title.value,
+              width: 670,
+              height: 440,
+            }}
+            title={featuredArticle.elements.title.value}
+            published={featuredArticle.elements.publish_date.value ?? ""}
+            tags={featuredArticle.elements.topics.value.map(t => t.name)}
+            description={featuredArticle.elements.introduction.value}
+            urlSlug={featuredArticle.elements.url_slug.value}
           />
-          <Selector
-            label="Article Topic"
-            options={[
-              { label: "All", codename: "all" },
-              ...articlesTopics.data.terms.map(t => ({ label: t.name, codename: t.codename })),
-            ]}
-            selectedOption={articleTopic}
-            onChange={handleArticleTopicChange}
+        </PageSection>
+      )}
+
+      <PageSection color="bg-white">
+        <div className="flex flex-col gap-8 pt-[104px] pb-[160px]">
+          <div className="flex flex-col lg:flex-row gap-8">
+            <Selector
+              label="Article Type"
+              options={[
+                { label: "All", codename: "" },
+                ...articleTypes.terms.map((t: ITaxonomyTerms) => ({
+                  label: t.name,
+                  codename: t.codename,
+                })),
+              ]}
+              selectedOption={articleType}
+              onChange={handleArticleTypeChange}
+            />
+            <Selector
+              label="Topic"
+              options={[
+                { label: "All", codename: "" },
+                ...articleTopics.terms.map((t: ITaxonomyTerms) => ({
+                  label: t.name,
+                  codename: t.codename,
+                })),
+              ]}
+              selectedOption={articleTopic}
+              onChange={handleArticleTopicChange}
+            />
+          </div>
+          <ArticleList
+            articles={articles.filter(a =>
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              isArticleType(articleTypeCodename)
+                ? a.elements.article_type.value[0]?.codename === articleTypeCodename
+                : true
+            )
+              .filter(a =>
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                isGeneralHealthcareTopics(articleTopicCodename)
+                  ? a.elements.topics.value.some((t: ITaxonomyTerms) => t.codename === articleTopicCodename)
+                  : true
+              )
+              .map(article => ({
+                image: {
+                  url: article.elements.image.value[0]?.url ?? "",
+                  alt: article.elements.image.value[0]?.description ?? article.elements.title.value,
+                },
+                title: article.elements.title.value,
+                introduction: article.elements.introduction.value,
+                publishDate: article.elements.publish_date.value ?? "",
+                topics: article.elements.topics.value.map(term => term.name),
+                urlSlug: article.elements.url_slug.value,
+              }))}
           />
         </div>
       </PageSection>
-      <ArticleList
-        articles={articles.filter(a =>
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          isArticleType(articleTypeCodename)
-            ? a.elements.article_type.value.find(t => t.codename === articleTypeCodename)
-            : true
-        )
-          .filter(a =>
-            isGeneralHealthcareTopics(articleTopicCodename)
-              ? a.elements.topics.value.find(t => t.codename === articleTopicCodename)
-              : true
-          )
-          .map(article => ({
-            image: {
-              url: article.elements.image.value[0]?.url ?? "",
-              alt: article.elements.image.value[0]?.description ?? "",
-            },
-            title: article.elements.title.value,
-            introduction: article.elements.introduction.value,
-            publishDate: article.elements.publish_date.value
-              ? new Date(article.elements.publish_date.value).toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })
-              : "No date",
-            topics: article.elements.topics.value.map(topic => topic.name),
-            urlSlug: article.elements.url_slug.value,
-          }))}
-      />
     </div>
   );
 };
