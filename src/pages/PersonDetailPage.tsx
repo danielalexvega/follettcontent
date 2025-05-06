@@ -26,13 +26,11 @@ const PersonDetailPage: React.FC = () => {
     queryFn: async () => {
       try {
         const response = await createClient(environmentId, apiKey, isPreview)
-          .items<Person>()
-          .type("person")
-          .equalsFilter("elements.url_slug", slug ?? "")
+          .item<Person>(slug ?? "")
           .languageParameter((lang ?? "default") as LanguageCodenames)
           .toPromise();
 
-        return response.data.items[0] ?? null;
+        return response.data.item ?? null;
       } catch (err) {
         if (err instanceof DeliveryError) {
           return null;

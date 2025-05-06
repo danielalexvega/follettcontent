@@ -134,12 +134,8 @@ const ServiceDetail: React.FC = () => {
 
   useCustomRefresh(onRefresh);
 
-  if (!service) {
-    return <div className="flex-grow" />;
-  }
-
   const teamMembers = useMemo(() => 
-    service.elements.team.linkedItems.map((person: Person) => ({
+    service?.elements.team.linkedItems.map((person: Person) => ({
       id: person.system.id,
       prefix: person.elements.prefix?.value,
       firstName: person.elements.first_name?.value || "",
@@ -152,7 +148,11 @@ const ServiceDetail: React.FC = () => {
           || `Photo of ${person.elements.first_name?.value} ${person.elements.last_name?.value}`,
       },
       codename: person.system.codename,
-    })), [service.elements.team.linkedItems]);
+    })) ?? [], [service?.elements.team.linkedItems]);
+
+  if (!service) {
+    return <div className="flex-grow" />;
+  }
 
   return (
     <div className="flex flex-col gap-12">
