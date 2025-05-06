@@ -1,9 +1,8 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { createClient } from "../utils/client";
 import { useAppContext } from "../context/AppContext";
 import { Article, LanguageCodenames } from "../model";
-import { DeliveryError } from "@kontent-ai/delivery-sdk";
 import { PortableText } from "@portabletext/react";
 import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
 import { defaultPortableRichTextResolvers } from "../utils/richtext";
@@ -13,8 +12,8 @@ import { NavLink } from "react-router";
 import PersonCard from "../components/PersonCard";
 import ArticleList from "../components/articles/ArticleList";
 import { createPreviewLink } from "../utils/link";
-import { IRefreshMessageData, IRefreshMessageMetadata, IUpdateMessageData, applyUpdateOnItemAndLoadLinkedItems } from "@kontent-ai/smart-link";
-import { useCustomRefresh, useLivePreview } from "../context/SmartLinkContext";
+import { IRefreshMessageData, IRefreshMessageMetadata } from "@kontent-ai/smart-link";
+import { useCustomRefresh } from "../context/SmartLinkContext";
 import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
 import { useQuery } from "@tanstack/react-query";
 
@@ -59,89 +58,6 @@ const HeroImageAuthorCard: React.FC<{
   );
 };
 
-const useArticle = (slug: string | undefined, isPreview: boolean, lang: string | null) => {
-  const { environmentId, apiKey } = useAppContext();
-  const [article, setArticle] = useState<Article | null>(null);
-  const [articleCodename, setArticleCodename] = useState<string | null>(null);
-
-  const handleLiveUpdate = useCallback((data: IUpdateMessageData) => {
-    if (article && data.item.codename === article.system.codename) {
-      // Use applyUpdateOnItemAndLoadLinkedItems to ensure all linked content is updated
-      applyUpdateOnItemAndLoadLinkedItems(
-        article,
-        data,
-        (codenamesToFetch) => createClient(environmentId, apiKey, isPreview)
-          .items()
-          .inFilter("system.codename", [...codenamesToFetch])
-          .toPromise()
-          .then(res => res.data.items)
-      ).then((updatedItem) => {
-        if (updatedItem) {
-          setArticle(updatedItem as Article);
-        }
-      });
-    }
-  }, [article, environmentId, apiKey, isPreview]);
-
-  // First fetch to get the article codename
-  useEffect(() => {
-    if (slug) {
-      createClient(environmentId, apiKey, isPreview)
-        .items<Article>()
-        .type("article")
-        .equalsFilter("elements.url_slug", slug)
-        .toPromise()
-        .then((res) => {
-          const item = res.data.items[0];
-          if (item) {
-            setArticleCodename(item.system.codename);
-          } else {
-            setArticleCodename(null);
-          }
-        })
-        .catch((err) => {
-          if (err instanceof DeliveryError) {
-            setArticleCodename(null);
-          } else {
-            throw err;
-          }
-        });
-    }
-  }, [slug, environmentId, apiKey, isPreview]);
-
-  // Second fetch to get the full article data with language
-  useEffect(() => {
-    if (articleCodename) {
-      createClient(environmentId, apiKey, isPreview)
-        .items<Article>()
-        .type("article")
-        .equalsFilter("system.codename", articleCodename)
-        .languageParameter((lang ?? "default") as LanguageCodenames)
-        .depthParameter(1)
-        .toPromise()
-        .then((res) => {
-          const item = res.data.items[0];
-          if (item) {
-            setArticle(item);
-          } else {
-            setArticle(null);
-          }
-        })
-        .catch((err) => {
-          if (err instanceof DeliveryError) {
-            setArticle(null);
-          } else {
-            throw err;
-          }
-        });
-    }
-  }, [articleCodename, environmentId, apiKey, isPreview, lang]);
-
-  useLivePreview(handleLiveUpdate);
-
-  return article;
-};
-
 const ArticleDetailPage: React.FC = () => {
   const { environmentId, apiKey } = useAppContext();
   const { slug } = useParams();
@@ -149,47 +65,31 @@ const ArticleDetailPage: React.FC = () => {
   const isPreview = searchParams.get("preview") === "true";
   const lang = searchParams.get("lang");
 
-  const article = useArticle(slug, isPreview, lang);
-
-  const articleSystem = useQuery({
-    queryKey: [`article-detail_${slug}-system`],
-    queryFn: () =>
-      createClient(environmentId, apiKey, isPreview)
+  const { data: article, refetch } = useQuery({
+    queryKey: ["article-detail", slug, lang],
+    queryFn: async () => {
+      // First get the article by slug
+      const systemResponse = await createClient(environmentId, apiKey, isPreview)
         .items<Article>()
         .type("article")
         .equalsFilter("elements.url_slug", slug ?? "")
-        .toPromise()
-        .then((res) => res.data.items[0])
-        .catch((err) => {
-          if (err instanceof DeliveryError) {
-            return null;
-          }
-          throw err;
-        }),
-  });
+        .toPromise();
 
-  const articleCodename = articleSystem.data?.system.codename;
-  
-  const articleData = useQuery({
-    queryKey: ["article-detail", slug, lang],
-    queryFn: () =>
-      createClient(environmentId, apiKey, isPreview)
+      const articleCodename = systemResponse.data.items[0]?.system.codename;
+      if (!articleCodename) return null;
+
+      // Then get the full article data with language
+      const articleResponse = await createClient(environmentId, apiKey, isPreview)
         .items<Article>()
         .type("article")
-        .equalsFilter("system.codename", articleCodename ?? "")
+        .equalsFilter("system.codename", articleCodename)
         .languageParameter((lang ?? "default") as LanguageCodenames)
         .depthParameter(1)
-        .toPromise()
-        .then((res) => {
-          return res.data.items[0];
-        })
-        .catch((err) => {
-          if (err instanceof DeliveryError) {
-            return null;
-          }
-          throw err;
-        }),
-    enabled: !!articleCodename,
+        .toPromise();
+
+      return articleResponse.data.items[0] ?? null;
+    },
+    enabled: !!slug,
   });
 
   const onRefresh = useCallback(
@@ -197,10 +97,10 @@ const ArticleDetailPage: React.FC = () => {
       if (metadata.manualRefresh) {
         originalRefresh();
       } else {
-        articleData.refetch();
+        refetch();
       }
     },
-    [articleData],
+    [refetch],
   );
 
   useCustomRefresh(onRefresh);
