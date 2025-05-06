@@ -87,7 +87,7 @@ const BlogDetail: React.FC = () => {
   }
 
   return (
-    <div className="container flex flex-col gap-12">
+    <div className="container flex flex-col gap-12 px3">
       <div className="flex flex-row items-center pt-[104px] pb-[160px]">
         <div className="flex flex-col flex-1 gap-6 ">
           {createTag("Blog Post")}
