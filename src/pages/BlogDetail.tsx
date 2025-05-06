@@ -8,8 +8,8 @@ import { DeliveryError } from "@kontent-ai/delivery-sdk";
 import { PortableText } from "@portabletext/react";
 import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
 import { defaultPortableRichTextResolvers } from "../utils/richtext";
-import { IRefreshMessageData, IRefreshMessageMetadata } from "@kontent-ai/smart-link";
-import { useCustomRefresh } from "../context/SmartLinkContext";
+import { IUpdateMessageData, applyUpdateOnItem } from "@kontent-ai/smart-link";
+import { useLivePreview } from "../context/SmartLinkContext";
 import {
   createElementSmartLink,
   createItemSmartLink,
@@ -47,18 +47,17 @@ const BlogDetail: React.FC = () => {
         }),
   });
 
-  const onRefresh = useCallback(
-    (_: IRefreshMessageData, metadata: IRefreshMessageMetadata, originalRefresh: () => void) => {
-      if (metadata.manualRefresh) {
-        originalRefresh();
-      } else {
+  const onUpdate = useCallback(
+    (data: IUpdateMessageData) => {
+      if (blogPost.data) {
+        applyUpdateOnItem(blogPost.data, data);
         blogPost.refetch();
       }
     },
     [blogPost],
   );
 
-  useCustomRefresh(onRefresh);
+  useLivePreview(onUpdate);
 
   if (!blogPost.data) {
     return <div className="flex-grow" />;
