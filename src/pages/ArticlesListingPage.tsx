@@ -82,7 +82,7 @@ const useArticlesListingPage = (isPreview: boolean, lang: string | null) => {
 
   useEffect(() => {
     createClient(environmentId, apiKey, isPreview)
-      .item<Page>("articles_listing")
+      .item<Page>("research")
       .languageParameter((lang ?? "default") as LanguageCodenames)
       .toPromise()
       .then(res => {
