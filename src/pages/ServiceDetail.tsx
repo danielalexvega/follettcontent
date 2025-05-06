@@ -3,7 +3,6 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { createClient } from "../utils/client";
 import { useAppContext } from "../context/AppContext";
 import { Service, Person, LanguageCodenames } from "../model";
-import { DeliveryError } from "@kontent-ai/delivery-sdk";
 import { PortableText } from "@portabletext/react";
 import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
 import { defaultPortableRichTextResolvers } from "../utils/richtext";
@@ -132,7 +131,7 @@ const ServiceDetail: React.FC = () => {
     },
     [refetch],
   );
-  
+
   useCustomRefresh(onRefresh);
 
   if (!service) {
