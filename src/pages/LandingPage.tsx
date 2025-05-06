@@ -12,8 +12,8 @@ import { useAppContext } from "../context/AppContext";
 import { Replace } from "../utils/types";
 import FeaturedContent from "../components/landingPage/FeaturedContent";
 import { useSearchParams } from "react-router-dom";
-import { useCustomRefresh, useLivePreview } from "../context/SmartLinkContext";
-import { IRefreshMessageData, IRefreshMessageMetadata, IUpdateMessageData, applyUpdateOnItem } from "@kontent-ai/smart-link";
+import { useLivePreview } from "../context/SmartLinkContext";
+import { IUpdateMessageData, applyUpdateOnItem } from "@kontent-ai/smart-link";
 
 const LandingPage: FC = () => {
   const { environmentId, apiKey } = useAppContext();
