@@ -13,6 +13,7 @@ import ArticlesListingPage from "./pages/ArticlesListingPage.tsx";
 import ArticleDetailPage from "./pages/ArticleDetailPage.tsx";
 import OurTeamPage from "./pages/OurTeamPage.tsx";
 import PersonDetailPage from "./pages/PersonDetailPage.tsx";
+import { ErrorBoundary } from "react-error-boundary";
 import Loader from "./components/Loader.tsx";
 import Page from "./pages/Page.tsx";
 
@@ -74,6 +75,13 @@ const router = createBrowserRouter([
   {
     path: "/envid/:envId",
     element: (
+      <ErrorBoundary
+        fallbackRender={({ error }) => (
+          <div>
+            There was an error! <pre>{error.message}</pre>
+          </div>
+        )}
+      >
         <Suspense
           fallback={
             <div className="flex w-screen h-screen justify-center">
@@ -83,6 +91,7 @@ const router = createBrowserRouter([
         >
           <Layout />
         </Suspense>
+      </ErrorBoundary>
     ),
     children: BaseRouting.map(p => ({
       path: `envid/:envId/${p.path}`,
