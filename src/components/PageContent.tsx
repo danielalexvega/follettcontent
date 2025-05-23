@@ -17,7 +17,7 @@ type PageContentProps = {
 };
 
 const PageContent: FC<PageContentProps> = ({ body, itemId, elementName }) => {
-  const portableText = transformToPortableText(body.value ?? "<p><br/></p>");
+  const portableText = transformToPortableText(body.value ?? "<p>maarten</p>");
 
   return (
     <div className="pt-[104px] pb-40 flex flex-col gap-40"
@@ -39,9 +39,7 @@ const createPortableTextComponents = (
   ...defaultPortableRichTextResolvers,
   types: {
     componentOrItem: ({ value }) => {
-      console.log('value', value);
       const item = element.linkedItems.find(item => item.system.codename === value.componentOrItem._ref) as IContentItem;
-      console.log('item', item);
       if (!item) {
         return <div>Did not find any item with codename {value.component._ref}</div>;
       }
