@@ -18,8 +18,10 @@ type PageContentProps = {
 
 const PageContent: FC<PageContentProps> = ({ body, itemId, elementName }) => {
   console.log('body', body);
-  console.log('body.value', body.value);
-  const portableText = transformToPortableText(body.value ?? "<p>maarten</p>");
+  console.log('body.value', ody.value);
+  const value = body.value ?? "<p><br/></p>";
+  console.log('value', value);
+  const portableText = transformToPortableText(value);
   console.log('portableText', portableText);
   return (
     <div className="pt-[104px] pb-40 flex flex-col gap-40"
