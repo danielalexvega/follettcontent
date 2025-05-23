@@ -2,15 +2,16 @@ import { FC } from "react";
 import { isDisclaimer, isVideo, LandingPage } from "../model";
 import Video from "./Video";
 import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
-import { defaultPortableRichTextResolvers, isEmptyRichText } from "../utils/richtext";
+import { defaultPortableRichTextResolvers } from "../utils/richtext";
 import { PortableText, PortableTextReactResolvers } from "@kontent-ai/rich-text-resolver/utils/react";
 import PromotionalDisclaimer from "./disclaimer/PromotionalDisclaimer";
 import InformationalDisclaimer from "./disclaimer/InformationalDisclaimer";
 import CallToAction from "./CallToAction";
 import { createElementSmartLink, createFixedAddSmartLink, createItemSmartLink } from "../utils/smartlink";
+import { Elements } from "@kontent-ai/delivery-sdk";
 
 type PageContentProps = {
-  body: LandingPage["elements"]["body_copy"];
+  body: Elements.RichTextElement;
   itemId: string;
   elementName: string;
 };
@@ -26,9 +27,7 @@ const PageContent: FC<PageContentProps> = ({ body, itemId, elementName }) => {
       )}
       {...createFixedAddSmartLink("end", "bottom")}
     >
-      {!isEmptyRichText(body.value) && (
-        <PortableText value={portableText} components={createPortableTextComponents(body,itemId)} />
-      )}
+      <PortableText value={portableText} components={createPortableTextComponents(body,itemId)} />
     </div>
   );
 };
