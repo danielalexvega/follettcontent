@@ -18,7 +18,7 @@ type PageContentProps = {
 
 const PageContent: FC<PageContentProps> = ({ body, itemId, elementName }) => {
   console.log('body', body);
-  console.log('body.value', ody.value);
+  console.log('body.value', body.value);
   const value = body.value ?? "<p><br/></p>";
   console.log('value', value);
   const portableText = transformToPortableText(value);
