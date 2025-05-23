@@ -13,7 +13,6 @@ import ArticlesListingPage from "./pages/ArticlesListingPage.tsx";
 import ArticleDetailPage from "./pages/ArticleDetailPage.tsx";
 import OurTeamPage from "./pages/OurTeamPage.tsx";
 import PersonDetailPage from "./pages/PersonDetailPage.tsx";
-import { ErrorBoundary } from "react-error-boundary";
 import Loader from "./components/Loader.tsx";
 import Page from "./pages/Page.tsx";
 
