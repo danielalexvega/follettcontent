@@ -75,13 +75,6 @@ const router = createBrowserRouter([
   {
     path: "/envid/:envId",
     element: (
-      <ErrorBoundary
-        fallbackRender={({ error }) => (
-          <div>
-            There was an error! <pre>{error.message}</pre>
-          </div>
-        )}
-      >
         <Suspense
           fallback={
             <div className="flex w-screen h-screen justify-center">
@@ -91,7 +84,6 @@ const router = createBrowserRouter([
         >
           <Layout />
         </Suspense>
-      </ErrorBoundary>
     ),
     children: BaseRouting.map(p => ({
       path: `envid/:envId/${p.path}`,
