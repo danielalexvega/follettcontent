@@ -39,7 +39,9 @@ const createPortableTextComponents = (
   ...defaultPortableRichTextResolvers,
   types: {
     componentOrItem: ({ value }) => {
+      console.log('value', value);
       const item = element.linkedItems.find(item => item.system.codename === value.componentOrItem._ref) as IContentItem;
+      console.log('item', item);
       if (!item) {
         return <div>Did not find any item with codename {value.component._ref}</div>;
       }
