@@ -17,14 +17,10 @@ type PageContentProps = {
 };
 
 const PageContent: FC<PageContentProps> = ({ body, itemId, elementName }) => {
-  console.log('body', body);
-  console.log('body.value', body.value);
   const value = !body || !body.value ? "<p><br/></p>" : body.value;
-  console.log('value', value);
   const portableText = transformToPortableText(value);
-  console.log('portableText', portableText);
   return (
-    <div className="pt-[104px] pb-40 flex flex-col gap-40"
+    <div className="pt-[104px] pb-20 flex flex-col"
       {...createItemSmartLink(itemId)}
       {...createElementSmartLink(
         elementName
