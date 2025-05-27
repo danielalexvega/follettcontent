@@ -102,7 +102,7 @@ const ArticleDetailPage: React.FC = () => {
   });
 
   const handleLiveUpdate = useCallback((data: IUpdateMessageData) => {
-    if (article && data.item.codename === article.system.codename) {
+    if (article) {
       applyUpdateOnItemAndLoadLinkedItems(
         article,
         data,

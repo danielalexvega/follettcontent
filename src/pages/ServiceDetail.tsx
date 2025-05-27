@@ -102,7 +102,7 @@ const ServiceDetail: React.FC = () => {
   });
 
   const handleLiveUpdate = useCallback((data: IUpdateMessageData) => {
-    if (service && data.item.codename === service.system.codename) {
+    if (service) {
       applyUpdateOnItemAndLoadLinkedItems(
         service,
         data,

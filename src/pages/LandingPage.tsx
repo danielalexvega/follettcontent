@@ -20,12 +20,12 @@ const useLandingPage = (isPreview: boolean, lang: string | null) => {
   const [landingPage, setLandingPage] = useState<Replace<LandingPage, { elements: Partial<LandingPage["elements"]> }> | null>(null);
 
   const handleLiveUpdate = useCallback((data: IUpdateMessageData) => {
-    if (landingPage && data.item.codename === landingPage.system.codename) {
+    if (landingPage) {
       // Use applyUpdateOnItemAndLoadLinkedItems to ensure all linked content is updated
       applyUpdateOnItemAndLoadLinkedItems(
         landingPage,
         data,
-        (codenamesToFetch) => createClient(environmentId, apiKey, isPreview)
+        codenamesToFetch => createClient(environmentId, apiKey, isPreview)
           .items()
           .inFilter("system.codename", [...codenamesToFetch])
           .toPromise()
