@@ -1,10 +1,11 @@
 import { DeliveryError } from "@kontent-ai/delivery-sdk";
+import { Elements, ElementType } from "@kontent-ai/delivery-sdk";
 
 import HeroImage from "../components/HeroImage";
 import PageContent from "../components/PageContent";
 import PageSection from "../components/PageSection";
 import "../index.css";
-import { LanguageCodenames, type LandingPage } from "../model";
+import { LanguageCodenames, type LandingPage, type Article, type Event, type CallToAction } from "../model";
 import { createClient } from "../utils/client";
 import { FC, useCallback, useState, useEffect } from "react";
 import { useAppContext } from "../context/AppContext";
@@ -20,8 +21,8 @@ const useLandingPage = (isPreview: boolean, lang: string | null) => {
   const [landingPage, setLandingPage] = useState<Replace<LandingPage, { elements: Partial<LandingPage["elements"]> }> | null>(null);
 
   const handleLiveUpdate = useCallback((data: IUpdateMessageData) => {
+    // Check if the update is for the landing page itself
     if (landingPage && data.item.codename === landingPage.system.codename) {
-      // Use applyUpdateOnItemAndLoadLinkedItems to ensure all linked content is updated
       applyUpdateOnItemAndLoadLinkedItems(
         landingPage,
         data,
@@ -41,6 +42,48 @@ const useLandingPage = (isPreview: boolean, lang: string | null) => {
           setLandingPage(updatedItem as Replace<LandingPage, { elements: Partial<LandingPage["elements"]> }>);
         }
       });
+    }
+    // Check if the update is for any of the linked items in featured content
+    else if (landingPage?.elements.featured_content?.linkedItems) {
+      const linkedItem = landingPage.elements.featured_content.linkedItems.find(
+        item => item.system.codename === data.item.codename
+      );
+      
+      if (linkedItem) {
+        // Fetch the updated item to ensure we have the correct type
+        createClient(environmentId, apiKey, isPreview)
+          .item(data.item.codename)
+          .languageParameter((lang ?? "default") as LanguageCodenames)
+          .toPromise()
+          .then(response => {
+            const updatedItem = response.data.item as Event | Article | CallToAction;
+            if (updatedItem) {
+              // Update the linked item in the featured content
+              const updatedLinkedItems = landingPage.elements.featured_content?.linkedItems.map(item => {
+                if (item.system.codename === data.item.codename) {
+                  return updatedItem;
+                }
+                return item;
+              });
+
+              // Create a new featured content element with the required properties
+              const updatedFeaturedContent: Elements.LinkedItemsElement<Event | Article | CallToAction> = {
+                name: "featured_content",
+                type: "modular_content" as ElementType,
+                value: updatedLinkedItems?.map(item => item.system.codename) ?? [],
+                linkedItems: updatedLinkedItems ?? []
+              };
+
+              setLandingPage({
+                ...landingPage,
+                elements: {
+                  ...landingPage.elements,
+                  featured_content: updatedFeaturedContent
+                }
+              });
+            }
+          });
+      }
     }
   }, [landingPage, environmentId, apiKey, isPreview, lang]);
 
