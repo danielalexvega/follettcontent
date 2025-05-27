@@ -25,18 +25,24 @@ const useLandingPage = (isPreview: boolean, lang: string | null) => {
       applyUpdateOnItemAndLoadLinkedItems(
         landingPage,
         data,
-        (codenamesToFetch) => createClient(environmentId, apiKey, isPreview)
-          .items()
-          .inFilter("system.codename", [...codenamesToFetch])
-          .toPromise()
-          .then(res => res.data.items)
+        async (codenamesToFetch) => {
+          if (codenamesToFetch.length === 0) return [];
+          
+          const response = await createClient(environmentId, apiKey, isPreview)
+            .items()
+            .inFilter("system.codename", [...codenamesToFetch])
+            .languageParameter((lang ?? "default") as LanguageCodenames)
+            .toAllPromise();
+            
+          return response.data.items;
+        }
       ).then((updatedItem) => {
         if (updatedItem) {
           setLandingPage(updatedItem as Replace<LandingPage, { elements: Partial<LandingPage["elements"]> }>);
         }
       });
     }
-  }, [landingPage, environmentId, apiKey, isPreview]);
+  }, [landingPage, environmentId, apiKey, isPreview, lang]);
 
   useEffect(() => {
     createClient(environmentId, apiKey, isPreview)
