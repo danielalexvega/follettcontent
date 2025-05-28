@@ -79,7 +79,7 @@ const useBlogPosts = (isPreview: boolean, lang: string | null) => {
               .then(res => res.data.items)
           ).then((updatedItem) => {
             if (updatedItem) {
-              setBlogPosts(prev => prev.map(p => 
+              setBlogPosts(prev => prev.map(p =>
                 p.system.codename === data.item.codename ? updatedItem as BlogPost : p
               ));
             }
@@ -132,35 +132,37 @@ const BlogPage: React.FC = () => {
         <div className="flex flex-col-reverse gap-16 lg:gap-0 lg:flex-row items-center py-16 lg:py-0 lg:pt-[104px] lg:pb-[160px]">
           <div className="flex flex-col flex-1 gap-6">
             <h1 className="text-heading-1 text-heading-1-color"
-            {...createItemSmartLink(blogPage.system.id)}
-            {...createElementSmartLink("headline")}
+              {...createItemSmartLink(blogPage.system.id)}
+              {...createElementSmartLink("headline")}
             >
               {blogPage.elements.headline.value}
             </h1>
             <p className="text-body-lg text-body-color"
-            {...createItemSmartLink(blogPage.system.id)}
-            {...createElementSmartLink("subheadline")}
+              {...createItemSmartLink(blogPage.system.id)}
+              {...createElementSmartLink("subheadline")}
             >
               {blogPage.elements.subheadline.value}
             </p>
           </div>
-          <div className="flex flex-col flex-1">
-            <img
-              width={670}
-              height={440}
-              src={blogPage.elements.hero_image?.value[0]?.url}
-              alt={blogPage.elements.hero_image?.value[0]?.description ?? ""}
-              className="rounded-lg"
-            />
-          </div>
+          {blogPage.elements.hero_image?.value[0]?.url && (
+            <div className="flex flex-col flex-1">
+              <img
+                width={670}
+                height={440}
+                src={blogPage.elements.hero_image?.value[0]?.url}
+                alt={blogPage.elements.hero_image?.value[0]?.description ?? ""}
+                className="rounded-lg"
+              />
+            </div>
+          )}
         </div>
       </PageSection>
 
       {!isEmptyRichText(blogPage.elements.body.value) && (
         <PageSection color="bg-white">
           <div className="flex flex-col pt-10 mx-auto gap-6"
-          {...createItemSmartLink(blogPage.system.id)}
-          {...createElementSmartLink("body")}
+            {...createItemSmartLink(blogPage.system.id)}
+            {...createElementSmartLink("body")}
           >
             <PortableText
               value={transformToPortableText(blogPage.elements.body.value)}
@@ -169,7 +171,7 @@ const BlogPage: React.FC = () => {
           </div>
         </PageSection>
       )}
-      
+
       <PageSection color="bg-white">
         <div className="pb-[160px] pt-[104px]">
           <BlogList
@@ -178,6 +180,7 @@ const BlogPage: React.FC = () => {
               title: post.elements.title.value,
               description: transformToPortableText(post.elements.body.value),
               readMoreLink: post.elements.url_slug.value,
+              itemId: post.system.id,
             }))}
           />
         </div>
