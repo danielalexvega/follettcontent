@@ -13,10 +13,11 @@ import { LanguageCodenames } from "../model";
 import { IUpdateMessageData, applyUpdateOnItemAndLoadLinkedItems } from "@kontent-ai/smart-link";
 import { useLivePreview } from "../context/SmartLinkContext";
 import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
+import { Replace } from "../utils/types";
 
 const useTeamPage = (isPreview: boolean, lang: string | null) => {
   const { environmentId, apiKey } = useAppContext();
-  const [page, setPage] = useState<Page | null>(null);
+  const [page, setPage] = useState<Replace<Page, { elements: Partial<Page["elements"]> }> | null>(null);
 
   const handleLiveUpdate = useCallback((data: IUpdateMessageData) => {
     if (page) {
@@ -31,7 +32,7 @@ const useTeamPage = (isPreview: boolean, lang: string | null) => {
           .then(res => res.data.items)
       ).then((updatedItem) => {
         if (updatedItem) {
-          setPage(updatedItem as Page);
+          setPage(updatedItem as Replace<Page, { elements: Partial<Page["elements"]> }>);
         }
       });
     }
@@ -79,7 +80,7 @@ const useTeamMembers = (isPreview: boolean, lang: string | null) => {
               .then(res => res.data.items)
           ).then((updatedItem) => {
             if (updatedItem) {
-              setTeamMembers(prev => prev.map(m => 
+              setTeamMembers(prev => prev.map(m =>
                 m.system.codename === data.item.codename ? updatedItem as Person : m
               ));
             }
@@ -132,14 +133,14 @@ const OurTeamPage: React.FC = () => {
         <div className="flex flex-col-reverse gap-16 lg:gap-0 lg:flex-row items-center py-16 lg:py-0 lg:pt-[104px] lg:pb-[160px]">
           <div className="flex flex-col flex-1 gap-6">
             <h1 className="text-heading-1 text-heading-1-color"
-            {...createItemSmartLink(teamPage.system.id)}
-            {...createElementSmartLink("headline")}
+              {...createItemSmartLink(teamPage.system.id)}
+              {...createElementSmartLink("headline")}
             >
               {teamPage.elements.headline.value}
             </h1>
             <p className="text-body-lg text-body-color"
-            {...createItemSmartLink(teamPage.system.id)}
-            {...createElementSmartLink("subheadline")}
+              {...createItemSmartLink(teamPage.system.id)}
+              {...createElementSmartLink("subheadline")}
             >
               {teamPage.elements.subheadline.value}
             </p>
@@ -159,8 +160,8 @@ const OurTeamPage: React.FC = () => {
       {!isEmptyRichText(teamPage.elements.body.value) && (
         <PageSection color="bg-white">
           <div className="flex flex-col pt-10 mx-auto gap-6"
-          {...createItemSmartLink(teamPage.system.id)}
-          {...createElementSmartLink("body")}
+            {...createItemSmartLink(teamPage.system.id)}
+            {...createElementSmartLink("body")}
           >
             <PortableText
               value={transformToPortableText(teamPage.elements.body.value)}
@@ -169,7 +170,7 @@ const OurTeamPage: React.FC = () => {
           </div>
         </PageSection>
       )}
-      
+
       <PageSection color="bg-white">
         <div className="pb-[160px] pt-[104px]">
           <TeamMemberList
