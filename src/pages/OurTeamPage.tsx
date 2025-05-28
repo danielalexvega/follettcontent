@@ -10,10 +10,11 @@ import { defaultPortableRichTextResolvers, isEmptyRichText } from "../utils/rich
 import { PortableText } from "@portabletext/react";
 import { transformToPortableText } from "@kontent-ai/rich-text-resolver";
 import { LanguageCodenames } from "../model";
-import { IUpdateMessageData, applyUpdateOnItemAndLoadLinkedItems } from "@kontent-ai/smart-link";
-import { useLivePreview } from "../context/SmartLinkContext";
+import { IRefreshMessageData, IRefreshMessageMetadata, IUpdateMessageData, applyUpdateOnItemAndLoadLinkedItems } from "@kontent-ai/smart-link";
+import { useCustomRefresh, useLivePreview } from "../context/SmartLinkContext";
 import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
 import { Replace } from "../utils/types";
+import { useSuspenseQueries } from "@tanstack/react-query";
 
 const useTeamPage = (isPreview: boolean, lang: string | null) => {
   const { environmentId, apiKey } = useAppContext();
@@ -63,6 +64,7 @@ const useTeamPage = (isPreview: boolean, lang: string | null) => {
 const useTeamMembers = (isPreview: boolean, lang: string | null) => {
   const { environmentId, apiKey } = useAppContext();
   const [teamMembers, setTeamMembers] = useState<Person[]>([]);
+  
 
   const handleLiveUpdate = useCallback((data: IUpdateMessageData) => {
     // Update the specific team member in the list
@@ -116,12 +118,49 @@ const useTeamMembers = (isPreview: boolean, lang: string | null) => {
 };
 
 const OurTeamPage: React.FC = () => {
+  const { environmentId, apiKey } = useAppContext();
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get("preview") === "true";
   const lang = searchParams.get("lang");
 
-  const teamPage = useTeamPage(isPreview, lang);
-  const teamMembers = useTeamMembers(isPreview, lang);
+  const teamPage = useTeamPage(isPreview, lang);  
+  const teamMembers = useTeamMembers(isPreview, lang);  
+
+  const [teamPageData] = useSuspenseQueries({
+    queries: [
+      {
+        queryKey: ["landing_page"],
+        queryFn: () =>
+          createClient(environmentId, apiKey, isPreview)
+            .items()
+            .type("landing_page")
+            .limitParameter(1)
+            .toPromise()
+            .then(res =>
+              res.data.items[0] as Replace<Page, { elements: Partial<Page["elements"]> }> ?? null
+            )
+            .catch((err) => {
+              if (err instanceof DeliveryError) {
+                return null;
+              }
+              throw err;
+            }),
+      },
+    ],
+  });
+
+  const onRefresh = useCallback(
+    (_: IRefreshMessageData, metadata: IRefreshMessageMetadata, originalRefresh: () => void) => {
+      if (metadata.manualRefresh) {
+        originalRefresh();
+      } else {
+        teamPageData.refetch();
+      }
+    },
+    [teamPage],
+  );
+
+  useCustomRefresh(onRefresh);
 
   if (!teamPage || !teamMembers) {
     return <div className="flex-grow" />;
