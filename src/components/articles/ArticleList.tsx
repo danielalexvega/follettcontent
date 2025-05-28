@@ -22,7 +22,7 @@ type ArticleListProps = Readonly<{
 
 const ArticleList: React.FC<ArticleListProps> = ({ articles }) => {
   return (
-    <div className="flex flex-col items-center ">
+    <div className="flex flex-col items-center">
       {articles.length === 0
         ? <p className="text-center text-grey text-body-xl">No articles available</p>
         : (articles.map((article, index) => (
