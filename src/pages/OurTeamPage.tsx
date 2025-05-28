@@ -136,13 +136,13 @@ const OurTeamPage: React.FC = () => {
               {...createItemSmartLink(teamPage.system.id)}
               {...createElementSmartLink("headline")}
             >
-              {teamPage.elements.headline.value}
+              {teamPage.elements.headline?.value}
             </h1>
             <p className="text-body-lg text-body-color"
               {...createItemSmartLink(teamPage.system.id)}
               {...createElementSmartLink("subheadline")}
             >
-              {teamPage.elements.subheadline.value}
+              {teamPage.elements.subheadline?.value}
             </p>
           </div>
           <div className="flex flex-col flex-1">
@@ -157,14 +157,14 @@ const OurTeamPage: React.FC = () => {
         </div>
       </PageSection>
 
-      {!isEmptyRichText(teamPage.elements.body.value) && (
+      {!isEmptyRichText(teamPage.elements.body?.value ?? "") && (
         <PageSection color="bg-white">
           <div className="flex flex-col pt-10 mx-auto gap-6"
             {...createItemSmartLink(teamPage.system.id)}
             {...createElementSmartLink("body")}
           >
             <PortableText
-              value={transformToPortableText(teamPage.elements.body.value)}
+              value={transformToPortableText(teamPage.elements.body?.value ?? "")}
               components={defaultPortableRichTextResolvers}
             />
           </div>
