@@ -47,12 +47,13 @@ const createPortableTextComponents = (
       switch (item.system.type) {
         case "video":
           return <VideoComponent video={item as Video} parentId={parentId} componentId={item.system.id} />;
-        case "disclaimer":
+        case "disclaimer": {
           const disclaimerItem = item as Disclaimer;
           return disclaimerItem.elements.type.value[0]?.codename === "promotional"
             ? <PromotionalDisclaimer title={disclaimerItem.elements.headline.value} text={disclaimerItem.elements.subheadline.value} parentId={parentId} componentId={item.system.id} />
             : <InformationalDisclaimer title={disclaimerItem.elements.headline.value} text={disclaimerItem.elements.subheadline.value} parentId={parentId} componentId={item.system.id} />;
-        case "call_to_action":
+        }
+        case "call_to_action": {
           const cta = item as CallToAction;
           return (
             <CallToActionComponent
@@ -67,6 +68,7 @@ const createPortableTextComponents = (
               componentId={cta.system.id}
             />
           );
+        }
         default:
           return (
             <div className="bg-red-500 text-white">
