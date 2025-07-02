@@ -11,8 +11,8 @@ type CallToActionProps = Readonly<{
   imageAlt: string;
   imagePosition?: "left" | "right" | "center";
   style?: "burgundy" | "default";
-  parentId: string;
-  componentId: string | null;
+  componentId: string;
+  componentName: string;
 }>;
 
 const CallToActionComponent: React.FC<CallToActionProps> = ({
@@ -24,8 +24,8 @@ const CallToActionComponent: React.FC<CallToActionProps> = ({
   imageAlt,
   imagePosition = "left",
   style = "default",
-  parentId,
   componentId,
+  componentName,
 }) => {
   const calculateLayout = (imagePosition: "left" | "right" | "center") => {
     if (imagePosition === "left") {
@@ -58,7 +58,7 @@ const CallToActionComponent: React.FC<CallToActionProps> = ({
 
           <div className={`flex lg:flex-1 flex-col gap-5 ${imagePosition === "center" ? "items-center" : ""}`}>
             <h2 className={`flex w-fit text-6xl font-bold text-heading-2-color`}
-            {...createItemSmartLink(parentId)}
+            {...createItemSmartLink(componentId, componentName)}
             {...createElementSmartLink("headline")}
             {...(componentId && createComponentSmartLink(componentId))}
             >
@@ -66,7 +66,7 @@ const CallToActionComponent: React.FC<CallToActionProps> = ({
             </h2>
 
             <p className={`flex text-xl text-body-color line-clamp-5`}
-            {...createItemSmartLink(parentId)}
+            {...createItemSmartLink(componentId, componentName)}
             {...createElementSmartLink("subheadline")}
             {...(componentId && createComponentSmartLink(componentId))}
             >

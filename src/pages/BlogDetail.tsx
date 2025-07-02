@@ -92,7 +92,7 @@ const BlogDetail: React.FC = () => {
         <div className="flex flex-col flex-1 gap-6 ">
           {createTag("Blog Post")}
           <h1 className="text-heading-1 text-heading-1-color mb-6 max-w-[12ch]"
-          {...createItemSmartLink(blogPost.system.id)}
+          {...createItemSmartLink(blogPost.system.id, blogPost.system.name)}
           {...createElementSmartLink("title")}
           >
             {blogPost.elements.title?.value}
