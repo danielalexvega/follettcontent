@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Video as VideoType } from "../model";
 import { Replace } from "../utils/types";
-import { createComponentSmartLink, createItemSmartLink } from "../utils/smartlink";
+import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
 import { getYouTubeEmbedUrl, isYouTubeUrl } from "../utils/youtube";
 
 type VideoProps = {
@@ -13,20 +13,21 @@ type VideoProps = {
 const VideoComponent: FC<VideoProps> = ({ video, componentId, componentName }) => {
   const videoUrl = video.elements.video_link?.value;
   const shouldAutoplay = video.elements.autoplay?.value[0]?.codename === "true";
-  
+
   // Get the proper embed URL for YouTube videos, or use the original URL for other video types
-  const embedUrl = videoUrl && isYouTubeUrl(videoUrl) 
+  const embedUrl = videoUrl && isYouTubeUrl(videoUrl)
     ? getYouTubeEmbedUrl(videoUrl, shouldAutoplay, shouldAutoplay)
     : videoUrl;
 
   return (
-    <div className="flex flex-col items-center py-16">
+    <div className="flex flex-col items-center py-16"
+      {...createItemSmartLink(componentId, componentName)}>
       <h2 className="text-azure text-[40px] md:text-[64px] leading-[54px] w-2/4 text-center"
-      {...createItemSmartLink(componentId, componentName)}
-      {...(componentId && createComponentSmartLink(componentId))}>
+        {...createElementSmartLink("headline")}>
         {video.elements.headline?.value}
       </h2>
-      <p className="w-4/6 text-center text-xl pt-6 text-gray">
+      <p className="w-4/6 text-center text-xl pt-6 text-gray"
+        {...createElementSmartLink("description")}>
         {video.elements.description?.value}
       </p>
       {embedUrl

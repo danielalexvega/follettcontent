@@ -29,7 +29,3 @@ const withDisable = (disable: boolean, attrs: Readonly<Record<string, string | u
 const disableAttribute = {
   "data-kontent-disable-features": "highlight",
 }
-
-export const createComponentSmartLink = (itemId: string | undefined, disableHighlight: boolean = false) => withDisable(disableHighlight, {
-  "data-kontent-component-id": itemId,
-});
