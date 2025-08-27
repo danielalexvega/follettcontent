@@ -130,7 +130,6 @@ const Page: FC = () => {
                 heroImage: page.elements.hero_image,
                 itemId: page.system.id
               }}
-              buttonLink="nolink"
             />
           </PageSection>
         )
