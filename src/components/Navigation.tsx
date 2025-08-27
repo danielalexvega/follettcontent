@@ -44,13 +44,18 @@ const Navigation: FC = () => {
 
   const createMenuLink = (name: string, link: string) => (
     <li key={name}>
-      <NavLink to={createPreviewLink(link, isPreview)} className="text-xl leading-5 text-gray w-fit block hover:text-burgundy">{name}</NavLink>
+      <NavLink 
+        to={createPreviewLink(link, isPreview)} 
+        className="text-white font-bold text-base hover:text-blue-200 transition-colors duration-200"
+      >
+        {name}
+      </NavLink>
     </li>
   );
 
   return (
     <nav>
-      <menu className="flex flex-col lg:flex-row gap-5 lg:gap-[60px] items-center list-none">
+      <menu className="flex flex-wrap gap-8 items-center list-none">
         {
           navigation.data?.map(({ name, link }) => createMenuLink(name, link))
         }

@@ -122,7 +122,7 @@ const Page: FC = () => {
     <div className="flex-grow">
       {
         page.elements.headline?.value && (
-          <PageSection color="bg-burgundy">
+          <PageSection color="bg-bcbsablue">
             <HeroImage
               data={{
                 headline: page.elements.headline,

@@ -9,6 +9,7 @@ export default {
     extend: {
       colors: {
         burgundy: "#993265",
+        bcbsablue: "#0066cd",
         azure: "#009edb",
         white: '#ffffff',
         grey: {

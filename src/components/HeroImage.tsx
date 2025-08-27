@@ -16,50 +16,67 @@ type HeroImageProps = Readonly<{
 
 const HeroImage: FC<HeroImageProps> = ({ data, buttonLink }) => {
   return (
-    <div className="burgundy-theme flex flex-col py-10 lg:py-0 lg:flex-row lg:gap-32">
-      <div className="lg:basis-1/2 pt-10 lg:pt-[104px] pb-10 lg:pb-[160px] flex flex-col items-center lg:items-start gap-10">
-        <h1 className="text-center lg:text-left font-libre text-[64px] md:text-[94px] text-heading-1-color font-bold leading-[64px] md:leading-[78px]"
-          {...createItemSmartLink(data.itemId)}
-          {...createElementSmartLink("headline")}
-        >
-          {data.headline?.value}
-        </h1>
-        <p className="text-center lg:text-left font-sans text-xl text-body-color"
-          {...createItemSmartLink(data.itemId)}
-          {...createElementSmartLink("subheadline")}
-        >{data.subheadline?.value}</p>
-        {buttonLink != "nolink" && (
-          <ButtonLink href={buttonLink ?? "services"}>
-            <p>Explore our services</p>
-          </ButtonLink>
-        )}
-      </div>
-      <div className="lg:basis-1/2"
+    <div className="bg-[#0066cc] flex flex-col lg:flex-row items-center py-16 px-8 lg:px-16 gap-8 lg:gap-12">
+      {/* Hero Image - Left Side */}
+      <div className="lg:basis-1/2 flex justify-center"
         {...createItemSmartLink(data.itemId)}
         {...createElementSmartLink("hero_image")}
       >
         {data.heroImage?.value[0]
           ? (
             data.heroImage.value[0].type?.startsWith('image') ? (
-              <img
-                className="object-cover h-full mx-auto"
-                width={660}
-                height={770}
-                src={`${data.heroImage.value[0].url}?auto=format&w=800`}
-                alt={data.heroImage.value[0].description ?? "image-alt"}
-              />
+              <div className="w-80 h-auto lg:w-96">
+                <img
+                  className="w-full h-auto"
+                  src={`${data.heroImage.value[0].url}?auto=format&w=400`}
+                  alt={data.heroImage.value[0].description ?? "Hero image"}
+                />
+              </div>
             ) : (
-              <video
-                src={data.heroImage.value[0].url}
-                autoPlay={true}
-                loop={true}
-                muted={true}
-                width={660}
-                height={770}    
-                className="object-cover h-full mx-auto"
-              />
+                             <div className="w-80 h-auto lg:w-96">
+                 <video
+                   src={data.heroImage.value[0].url}
+                   autoPlay={true}
+                   loop={true}
+                   muted={true}
+                   className="w-full h-auto"
+                 />
+               </div>
             )
-          ) : <></>}
+          ) : (
+                         <div className="w-80 h-80 lg:w-96 lg:h-96 bg-gray-300 flex items-center justify-center">
+               <span className="text-gray-500 text-lg">No image</span>
+             </div>
+          )}
+      </div>
+
+      {/* Content - Right Side */}
+      <div className="lg:basis-1/2 flex flex-col items-center lg:items-start gap-6 text-center lg:text-left">
+        <h1 className="text-white font-sans text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight"
+          {...createItemSmartLink(data.itemId)}
+          {...createElementSmartLink("headline")}
+        >
+          {data.headline?.value}
+        </h1>
+        
+        {data.subheadline?.value && (
+          <p className="text-white font-sans text-xl lg:text-2xl leading-relaxed"
+            {...createItemSmartLink(data.itemId)}
+            {...createElementSmartLink("subheadline")}
+          >
+            {data.subheadline.value}
+          </p>
+        )}
+        
+        {buttonLink && buttonLink !== "nolink" && (
+          <div className="mt-4">
+            <ButtonLink href={buttonLink}>
+              <span className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 px-6 rounded-lg transition-colors duration-200">
+                Explore Tools and Resources
+              </span>
+            </ButtonLink>
+          </div>
+        )}
       </div>
     </div>
   );
