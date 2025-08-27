@@ -17,7 +17,7 @@
             /*
 * Array of all element codenames
 */
-            export const elementCodenames = ['title', 'image', 'body', 'metadata__title', 'metadata__keywords', 'metadata__description', 'url_slug', 'headline', 'subheadline', 'button_text', 'button_label', 'hero_image', 'body_copy', 'featured_content', 'subpages', 'name', 'summary', 'description', 'team', 'medical_specialties', 'image_position', 'button_link', 'url', 'start_date', 'end_date', 'event_type', 'event_topic', 'first_name', 'last_name', 'prefix', 'suffixes', 'biography', 'job_title', 'phone', 'email', 'website', 'video_link', 'caption', 'autoplay', 'type', 'publish_date', 'introduction', 'author', 'article_type', 'topics', 'related_articles'] as const;;
+            export const elementCodenames = ['title', 'image', 'body', 'metadata__title', 'metadata__keywords', 'metadata__description', 'url_slug', 'headline', 'subheadline', 'button_label', 'button_link', 'hero_image', 'body_copy', 'featured_content', 'subpages', 'name', 'summary', 'description', 'team', 'medical_specialties', 'image_position', 'url', 'start_date', 'end_date', 'event_type', 'event_topic', 'first_name', 'last_name', 'prefix', 'suffixes', 'biography', 'job_title', 'phone', 'email', 'website', 'video_link', 'caption', 'autoplay', 'type', 'publish_date', 'introduction', 'author', 'article_type', 'topics', 'related_articles'] as const;;
            
             /*
 * Type representing all element codenames

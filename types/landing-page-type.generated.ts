@@ -69,23 +69,23 @@ export type LandingPageType = IContentItem<
 /*
     * Button Label
     *
-    * Codename: button_text
+    * Codename: button_label
 * Id: 9da3b6b5-2b46-4a14-8941-3d93a732a528
 * Type: text
 * Required: false
     */
-                readonly button_text: Elements.TextElement;
+                readonly button_label: Elements.TextElement;
 
 /*
     * Button Link
     *
-    * Codename: button_label
+    * Codename: button_link
 * Id: 8cf20a29-26d3-487b-babf-6cf1344ade9d
 * Type: modular_content
 * Required: false
 * Allowed content types: page
     */
-                readonly button_label: Elements.LinkedItemsElement<PageType>;
+                readonly button_link: Elements.LinkedItemsElement<PageType>;
 
 /*
     * Hero Image
@@ -134,7 +134,7 @@ LandingPageTypeCodename, LanguageCodenames, CollectionCodenames, WorkflowCodenam
 /*
 * Type representing all available element codenames for Landing Page
 */
-export type LandingPageTypeElementCodenames = 'headline' | 'subheadline' | 'button_text' | 'button_label' | 'hero_image' | 'body_copy' | 'featured_content' | 'subpages';;
+export type LandingPageTypeElementCodenames = 'headline' | 'subheadline' | 'button_label' | 'button_link' | 'hero_image' | 'body_copy' | 'featured_content' | 'subpages';;
 
 /*
     * Type guard for Landing Page
