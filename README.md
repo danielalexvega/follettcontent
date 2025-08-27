@@ -9,7 +9,7 @@
 
 This repository contains the solution for the Kontent.ai Kickstart Sample React App. It serves as a learning resource for those starting new projects with Kontent.ai, providing a foundational template to build upon.
 
-This has been repurposed for Blue Cross Blue Shield Alabama
+This has been repurposed for Blue Cross Blue Shield Alabama. 
 
 If you'd like to explore a fully set up Kontent.ai project, you can import content from one of the backups located in the `./scripts/backups` folder.
 
