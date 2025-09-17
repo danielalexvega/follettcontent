@@ -19,7 +19,7 @@ import type { ArticleType } from '../types/article-type.generated.js';
 import type { BlogPostType } from '../types/blog-post-type.generated.js';
 import type { CallToActionType } from '../types/call-to-action-type.generated.js';
 import type { CollectionCodenames } from '../system/collections.generated.js';
-import type { CoreType } from '../system/types.generated.js';
+// import type { CoreType } from '../system/types.generated.js';
 import type { CTACardType } from '../types/cta-card-type.generated.js';
 import type { DisclaimerType } from '../types/disclaimer-type.generated.js';
 import type { EventType } from '../types/event-type.generated.js';

@@ -92,13 +92,23 @@ export type CTACardType = IContentItem<
 * Required: false
 * Guidelines: Use if you are not linking to an internal page
     */
-                readonly outside_url: Elements.TextElement;} & AudienceSnippet, 
+                readonly outside_url: Elements.TextElement;
+
+/*
+    * Background Image
+    *
+    * Codename: background_image
+* Id: 2def76d2-1a83-482a-81ef-232fea051be3
+* Type: asset
+* Required: false
+    */
+                readonly background_image: Elements.AssetsElement;} & AudienceSnippet, 
 CTACardTypeCodename, LanguageCodenames, CollectionCodenames, WorkflowCodenames, WorkflowStepCodenames>
 
 /*
 * Type representing all available element codenames for CTA Card
 */
-export type CTACardTypeElementCodenames = 'title' | 'body' | 'link_text' | 'page_link' | 'outside_url' | 'audience__audience' | 'audience__offerings';;
+export type CTACardTypeElementCodenames = 'title' | 'body' | 'link_text' | 'page_link' | 'outside_url' | 'audience__audience' | 'audience__offerings' | 'background_image';;
 
 /*
     * Type guard for CTA Card

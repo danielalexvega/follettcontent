@@ -15,7 +15,6 @@
 
             import type { SnippetCodenames } from '../system/snippets.generated.js';
 import type { Elements, Snippet } from '@kontent-ai/delivery-sdk';
-import type { CoreType } from '../system/types.generated.js';
            
             /*
 * Type representing codename of 'Metadata' snippet

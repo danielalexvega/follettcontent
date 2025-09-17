@@ -16,7 +16,6 @@
             import type { TypeCodenames } from '../system/types.generated.js';
 import type { Elements, IContentItem } from '@kontent-ai/delivery-sdk';
 import type { CollectionCodenames } from '../system/collections.generated.js';
-import type { CoreType } from '../system/types.generated.js';
 import type { LanguageCodenames } from '../system/languages.generated.js';
 import type { PageType } from '../types/page-type.generated.js';
 import type { WorkflowCodenames, WorkflowStepCodenames } from '../system/workflows.generated.js';

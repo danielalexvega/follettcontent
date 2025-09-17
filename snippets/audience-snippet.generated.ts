@@ -16,7 +16,7 @@
             import type { SnippetCodenames } from '../system/snippets.generated.js';
 import type { Elements, Snippet } from '@kontent-ai/delivery-sdk';
 import type { AudienceTaxonomyTermCodenames, AudienceTaxonomyCodename } from '../taxonomies/audience-taxonomy.generated.js';
-import type { CoreType } from '../system/types.generated.js';
+
 import type { OfferingsTaxonomyTermCodenames, OfferingsTaxonomyCodename } from '../taxonomies/offerings-taxonomy.generated.js';
            
             /*

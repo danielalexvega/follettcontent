@@ -3,13 +3,15 @@ import { DeliveryError } from "@kontent-ai/delivery-sdk";
 import HeroImage from "../components/HeroImage";
 import PageContent from "../components/PageContent";
 import PageSection from "../components/PageSection";
+// import CTACardComponent from "../components/CTACard";
 import "../index.css";
-import { LanguageCodenames, type LandingPage } from "../model";
+import { LanguageCodenames } from "../model";
+import { LandingPageType } from "../../types/landing-page-type.generated";
 import { createClient } from "../utils/client";
 import { FC, useCallback, useState, useEffect } from "react";
 import { useAppContext } from "../context/AppContext";
 import { Replace } from "../utils/types";
-import FeaturedContent from "../components/landingPage/FeaturedContent";
+import FeaturedContent from "../components/FeaturedContent";
 import { useSearchParams } from "react-router-dom";
 import { useCustomRefresh, useLivePreview } from "../context/SmartLinkContext";
 import { IRefreshMessageData, IRefreshMessageMetadata, IUpdateMessageData, applyUpdateOnItemAndLoadLinkedItems } from "@kontent-ai/smart-link";
@@ -17,7 +19,7 @@ import { useSuspenseQueries } from "@tanstack/react-query";
 
 const useLandingPage = (isPreview: boolean, lang: string | null) => {
   const { environmentId, apiKey, collection } = useAppContext();
-  const [landingPage, setLandingPage] = useState<Replace<LandingPage, { elements: Partial<LandingPage["elements"]> }> | null>(null);
+  const [landingPage, setLandingPage] = useState<Replace<LandingPageType, { elements: Partial<LandingPageType["elements"]> }> | null>(null);
 
   const handleLiveUpdate = useCallback((data: IUpdateMessageData) => {
     if (landingPage) {
@@ -32,7 +34,7 @@ const useLandingPage = (isPreview: boolean, lang: string | null) => {
           .then(res => res.data.items)
       ).then((updatedItem) => {
         if (updatedItem) {
-          setLandingPage(updatedItem as Replace<LandingPage, { elements: Partial<LandingPage["elements"]> }>);
+          setLandingPage(updatedItem as Replace<LandingPageType, { elements: Partial<LandingPageType["elements"]> }>);
         }
       });
     }
@@ -48,8 +50,9 @@ const useLandingPage = (isPreview: boolean, lang: string | null) => {
       .languageParameter((lang ?? "default") as LanguageCodenames)
       .toPromise()
       .then(res => {
-        const item = res.data.items[0] as Replace<LandingPage, { elements: Partial<LandingPage["elements"]> }> | undefined;
+        const item = res.data.items[0] as Replace<LandingPageType, { elements: Partial<LandingPageType["elements"]> }> | undefined;
         if (item) {
+          console.log(item);
           setLandingPage(item);
         } else {
           setLandingPage(null);
@@ -90,7 +93,7 @@ const LandingPage: FC = () => {
             .equalsFilter("system.collection", collection ?? "patient_resources")
             .toPromise()
             .then(res =>
-              res.data.items[0] as Replace<LandingPage, { elements: Partial<LandingPage["elements"]> }> ?? null
+              res.data.items[0] as Replace<LandingPageType, { elements: Partial<LandingPageType["elements"]> }> ?? null
             )
             .catch((err) => {
               if (err instanceof DeliveryError) {
@@ -136,7 +139,12 @@ const LandingPage: FC = () => {
       <PageSection color="bg-white">
         <PageContent body={landingPage.elements.body_copy!} itemId={landingPage.system.id} elementName="body_copy" />
       </PageSection>
-      <FeaturedContent featuredContent={landingPage.elements.featured_content!} parentId={landingPage.system.id}></FeaturedContent>
+
+      <FeaturedContent data={{
+        featured_blog_posts: landingPage.elements.featured_blog_posts?.linkedItems,
+        homepage_cta_cards: landingPage.elements.homepage_cta_cards?.linkedItems,
+        webinars: landingPage.elements.webinars?.linkedItems
+      }} />
     </div>
   );
 };
