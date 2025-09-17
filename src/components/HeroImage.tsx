@@ -17,8 +17,8 @@ const HeroImage: FC<HeroImageProps> = ({ data }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Get button link from the linked page
-  const buttonLink = data.button_link?.value?.[0] || "";
-  const buttonText = data.button_label?.value || "";
+  // const buttonLink = data.button_link?.value?.[0] || "";
+  // const buttonText = data.button_label?.value || "";
 
   // Get array of images from heroImage
   const images = data.heroImage?.value || [];
