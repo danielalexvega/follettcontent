@@ -34,7 +34,7 @@
             /*
 * Array of all workflow codenames
 */
-            export const workflowStepCodenames = ['draft', 'copy_review', 'published', 'archived', 'scheduled', 'draft_b242d4d', 'medical_review', 'legal_review', 'marketing_review', 'draft_a8b162c', 'translation', 'peer_review', 'reviewed', 'draft_97d445e', 'staff_member_review', 'reviewed_1778942'] as const;;
+            export const workflowStepCodenames = ['draft', 'copy_review', 'published', 'archived', 'scheduled', 'draft_b242d4d', 'legal_review', 'marketing_review', 'draft_a8b162c', 'translation', 'peer_review', 'reviewed', 'draft_97d445e', 'staff_member_review', 'reviewed_1778942'] as const;;
            
             /*
 * Type representing all workflow codenames

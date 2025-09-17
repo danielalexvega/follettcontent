@@ -67,7 +67,7 @@ export type CallToActionType = IContentItem<
     * Codename: image
 * Id: 8f312d9d-d8a2-484a-96c0-39391bf090db
 * Type: asset
-* Required: true
+* Required: false
     */
                 readonly image: Elements.AssetsElement;
 

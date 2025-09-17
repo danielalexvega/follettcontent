@@ -30,7 +30,7 @@
             /*
 * Array of all taxonomy term codenames
 */
-            export const bookClassificationTaxonomyTermCodenames = ['history', 'philosophy', 'business', 'memoir', 'true_crime', 'nonfiction', 'mystery_thriller', 'fantasy', 'science_fiction', 'dystopian', 'romance', 'horror', 'adventure', 'historical_fiction', 'self_help', 'fiction'] as const;;
+            export const bookClassificationTaxonomyTermCodenames = ['history', 'philosophy', 'business', 'memoir', 'true_crime', 'sports', 'nonfiction', 'mystery_thriller', 'fantasy', 'science_fiction', 'dystopian', 'romance', 'horror', 'adventure', 'historical_fiction', 'self_help', 'easy', 'manga', 'graphic_novel', 'fiction'] as const;;
            
             /*
 * Type representing all taxonomy term codenames

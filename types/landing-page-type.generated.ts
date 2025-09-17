@@ -16,14 +16,17 @@
             import type { TypeCodenames } from '../system/types.generated.js';
 import type { Elements, IContentItem } from '@kontent-ai/delivery-sdk';
 import type { ArticleType } from '../types/article-type.generated.js';
+import type { BlogPostType } from '../types/blog-post-type.generated.js';
 import type { CallToActionType } from '../types/call-to-action-type.generated.js';
 import type { CollectionCodenames } from '../system/collections.generated.js';
 import type { CoreType } from '../system/types.generated.js';
+import type { CTACardType } from '../types/cta-card-type.generated.js';
 import type { DisclaimerType } from '../types/disclaimer-type.generated.js';
 import type { EventType } from '../types/event-type.generated.js';
 import type { LanguageCodenames } from '../system/languages.generated.js';
 import type { PageType } from '../types/page-type.generated.js';
 import type { VideoType } from '../types/video-type.generated.js';
+import type { WebinarType } from '../types/webinar-type.generated.js';
 import type { WorkflowCodenames, WorkflowStepCodenames } from '../system/workflows.generated.js';
            
             /*
@@ -88,6 +91,39 @@ export type LandingPageType = IContentItem<
                 readonly body_copy: Elements.RichTextElement<VideoType | DisclaimerType | CallToActionType>;
 
 /*
+    * Webinars
+    *
+    * Codename: webinars
+* Id: 921742ec-fe00-43e4-ac51-b33375521529
+* Type: modular_content
+* Required: true
+* Allowed content types: webinar
+    */
+                readonly webinars: Elements.LinkedItemsElement<WebinarType>;
+
+/*
+    * Homepage CTA Cards
+    *
+    * Codename: homepage_cta_cards
+* Id: 1d5e6895-2272-4206-90eb-54bbd3728892
+* Type: modular_content
+* Required: true
+* Allowed content types: cta_card
+    */
+                readonly homepage_cta_cards: Elements.LinkedItemsElement<CTACardType>;
+
+/*
+    * Featured Blog Posts
+    *
+    * Codename: featured_blog_posts
+* Id: 9049dc0c-b59c-4809-a507-e05b535a9ac7
+* Type: modular_content
+* Required: false
+* Allowed content types: blog_post
+    */
+                readonly featured_blog_posts: Elements.LinkedItemsElement<BlogPostType>;
+
+/*
     * Featured Content
     *
     * Codename: featured_content
@@ -113,7 +149,7 @@ LandingPageTypeCodename, LanguageCodenames, CollectionCodenames, WorkflowCodenam
 /*
 * Type representing all available element codenames for Landing Page
 */
-export type LandingPageTypeElementCodenames = 'headline' | 'subheadline' | 'hero_image' | 'body_copy' | 'featured_content' | 'subpages';;
+export type LandingPageTypeElementCodenames = 'headline' | 'subheadline' | 'hero_image' | 'body_copy' | 'webinars' | 'homepage_cta_cards' | 'featured_blog_posts' | 'featured_content' | 'subpages';;
 
 /*
     * Type guard for Landing Page

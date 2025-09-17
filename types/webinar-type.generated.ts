@@ -15,6 +15,7 @@
 
             import type { TypeCodenames } from '../system/types.generated.js';
 import type { Elements, IContentItem } from '@kontent-ai/delivery-sdk';
+import type { AudienceSnippet } from '../snippets/audience-snippet.generated.js';
 import type { CollectionCodenames } from '../system/collections.generated.js';
 import type { CoreType } from '../system/types.generated.js';
 import type { LanguageCodenames } from '../system/languages.generated.js';
@@ -78,13 +79,13 @@ export type WebinarType = IContentItem<
 * Type: date_time
 * Required: false
     */
-                readonly webinar_date_and_time: Elements.DateTimeElement;}, 
+                readonly webinar_date_and_time: Elements.DateTimeElement;} & AudienceSnippet, 
 WebinarTypeCodename, LanguageCodenames, CollectionCodenames, WorkflowCodenames, WorkflowStepCodenames>
 
 /*
 * Type representing all available element codenames for Webinar
 */
-export type WebinarTypeElementCodenames = 'title' | 'webinar_description' | 'registration_link' | 'webinar_date_and_time';;
+export type WebinarTypeElementCodenames = 'title' | 'webinar_description' | 'registration_link' | 'webinar_date_and_time' | 'audience__audience' | 'audience__offerings';;
 
 /*
     * Type guard for Webinar

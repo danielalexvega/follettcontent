@@ -123,13 +123,33 @@ export type BookType = IContentItem<
 * Required: false
 * Taxonomy: book_classification
     */
-                readonly book_classification: Elements.TaxonomyElement<BookClassificationTaxonomyTermCodenames, BookClassificationTaxonomyCodename>;}, 
+                readonly book_classification: Elements.TaxonomyElement<BookClassificationTaxonomyTermCodenames, BookClassificationTaxonomyCodename>;
+
+/*
+    * Publisher
+    *
+    * Codename: publisher
+* Id: 80840ba5-cc14-4149-8745-4bf9053b5fdd
+* Type: text
+* Required: false
+    */
+                readonly publisher: Elements.TextElement;
+
+/*
+    * Format
+    *
+    * Codename: format
+* Id: cb83bfaf-6177-4958-a8a4-93bd07480ca4
+* Type: multiple_choice
+* Required: false
+    */
+                readonly format: Elements.MultipleChoiceElement<BookTypeFormatMultipleChoiceOptions>;}, 
 BookTypeCodename, LanguageCodenames, CollectionCodenames, WorkflowCodenames, WorkflowStepCodenames>
 
 /*
 * Type representing all available element codenames for Book
 */
-export type BookTypeElementCodenames = 'title' | 'author' | 'book_overview' | 'description' | 'cover' | 'page_count' | 'book_audience' | 'book_classification';;
+export type BookTypeElementCodenames = 'title' | 'author' | 'book_overview' | 'description' | 'cover' | 'page_count' | 'book_audience' | 'book_classification' | 'publisher' | 'format';;
 
 /*
     * Type guard for Book
@@ -141,6 +161,6 @@ export function isBookType(item: IContentItem | undefined | null): item is BookT
                 return item?.system.type === ('book' satisfies BookTypeCodename);
             };
 
-
+export type BookTypeFormatMultipleChoiceOptions = 'hardcover' | 'paperback' | 'ebook'
 
             

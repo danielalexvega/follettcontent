@@ -67,14 +67,16 @@ const Navigation: FC = () => {
 
   return (
     <nav className="bg-[rgba(85,85,85,0.25)] rounded-[50px] px-6 py-4 flex items-center justify-between">
-      {/* Logo */}
-      <div className="flex items-center">
-        <img 
-          src="/Follett-Content-white.png" 
-          alt="Follett Content"
-          className="h-8 w-auto"
-        />
-      </div>
+          {/* Logo */}
+          <div className="flex items-center">
+            <a href="/#">
+              <img 
+                src="/Follett-Content-white.png" 
+                alt="Follett Content"
+                className="h-8 w-auto"
+              />
+            </a>
+          </div>
 
       {/* Navigation Items Container */}
       <div>
