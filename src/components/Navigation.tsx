@@ -66,7 +66,7 @@ const Navigation: FC = () => {
   const navItems = navigation.data && navigation.data.length > 0 ? navigation.data : fallbackNavItems;
 
   return (
-    <nav className="bg-transparent rounded-[50px] px-6 py-4 flex items-center justify-between">
+    <nav className="bg-[rgba(85,85,85,0.25)] rounded-[50px] px-6 py-4 flex items-center justify-between">
       {/* Logo */}
       <div className="flex items-center">
         <img 

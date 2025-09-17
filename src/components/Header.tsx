@@ -40,7 +40,7 @@ export default function Header() {
       {/* Bottom section - Navigation bar */}
       <div className="bg-transparent">
         <Container className={`max-w-[1420px] fixed z-50 transition-all duration-300 left-0 right-0 
-          ${scrolled ? "top-[43px]" : "top-[164px]"}`}>
+          ${scrolled ? "top-[43px]" : "top-[195px]"}`}>
           <div className="py-3">
             <Navigation />
           </div>

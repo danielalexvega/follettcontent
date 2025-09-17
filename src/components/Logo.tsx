@@ -5,9 +5,9 @@ const Logo: FC = () => (
   <Link to="/">
     <div className="flex gap-4 items-center">
       <img 
-        src="/bcbsa.svg" 
-        alt="BCBSA Logo" 
-        className="w-16 h-auto sm:w-24 md:w-32 lg:w-48 xl:w-[300px] object-contain"
+        src="/Follett-Content-white.png" 
+        alt="Follett Content Logo" 
+        className="h-8 w-auto object-contain"
       />
     </div>
   </Link>
