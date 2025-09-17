@@ -16,14 +16,14 @@
             import type { CollectionCodenames } from '../system/collections.generated.js';
            
             /*
-* Type representing codename of 'Common' collection
+* Type representing codename of 'Librarian Resources' collection
 */
-            export type CommonCollectionCodename = keyof Pick<Record<CollectionCodenames, null>, "default">;
+            export type LibrarianResourcesCollectionCodename = keyof Pick<Record<CollectionCodenames, null>, "patient_resources">;
 
             /*
-* Typeguard for codename of 'Common' collection
+* Typeguard for codename of 'Librarian Resources' collection
 */
-            export function isCommonCollectionCodename(value: string | undefined | null): value is CommonCollectionCodename {
-                return typeof value === 'string' && value === ('default' satisfies CommonCollectionCodename);
+            export function isLibrarianResourcesCollectionCodename(value: string | undefined | null): value is LibrarianResourcesCollectionCodename {
+                return typeof value === 'string' && value === ('patient_resources' satisfies LibrarianResourcesCollectionCodename);
             }
             

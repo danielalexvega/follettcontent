@@ -5,9 +5,9 @@
  *  
  * -------------------------------------------------------------------------------
  * 
- * Project: BCBSA 🏥 🔵
+ * Project: Follett Content
  * Environment: Production
- * Id: 9da2775f-eede-00c1-d7ce-96bf2cae2fed
+ * Id: 0537e98b-379f-0050-5134-9e8d9c775098
  * 
  * -------------------------------------------------------------------------------
  */
@@ -17,7 +17,7 @@
             /*
 * Array of all collection codenames
 */
-            export const collectionCodenames = ['default', 'academic_content', 'patient_resources', 'operations'] as const;;
+            export const collectionCodenames = ['academic_content', 'default', 'operations', 'patient_resources', 'marketing_resources'] as const;;
            
             /*
 * Type representing all collection codenames

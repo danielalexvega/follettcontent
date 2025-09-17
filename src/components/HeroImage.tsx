@@ -1,6 +1,5 @@
 import { Elements } from "@kontent-ai/delivery-sdk";
-import { FC } from "react";
-import ButtonLink from "./ButtonLink";
+import { FC, useState, useEffect } from "react";
 import { createElementSmartLink, createItemSmartLink } from "../utils/smartlink";
 
 type HeroImageProps = Readonly<{
@@ -15,75 +14,71 @@ type HeroImageProps = Readonly<{
 }>;
 
 const HeroImage: FC<HeroImageProps> = ({ data }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   // Get button link from the linked page
-  console.log(data.button_link);
-  const buttonLink = data.button_link?.value?.[0]|| "";
+  const buttonLink = data.button_link?.value?.[0] || "";
   const buttonText = data.button_label?.value || "";
-  console.log(buttonLink);
-  
+
+  // Get array of images from heroImage
+  const images = data.heroImage?.value || [];
+
+  // Cycle through images every 20 seconds
+  useEffect(() => {
+    if (images.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 20000); // 20 seconds
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  // Get current image URL
+  const currentImageUrl = images[currentImageIndex]?.url || "";
 
   return (
-    <div className="bg-[#0066cc] flex flex-col lg:flex-row items-center py-16 px-8 lg:px-16 gap-8 lg:gap-12">
-      {/* Hero Image - Left Side */}
-      <div className="lg:basis-1/2 flex justify-center"
+    <div id="cpage-hero-container">
+      <div
+        id="cpage-hero"
+        style={{
+          backgroundImage: currentImageUrl ? `url(${currentImageUrl})` : 'none',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          height: '65vh',
+          minHeight: '820px',
+          position: 'relative'
+        }}
         {...createItemSmartLink(data.itemId)}
         {...createElementSmartLink("hero_image")}
       >
-        {data.heroImage?.value[0]
-          ? (
-            data.heroImage.value[0].type?.startsWith('image') ? (
-              <div className="w-80 h-auto lg:w-96">
-                <img
-                  className="w-full h-auto"
-                  src={`${data.heroImage.value[0].url}?auto=format&w=400`}
-                  alt={data.heroImage.value[0].description ?? "Hero image"}
-                />
-              </div>
-            ) : (
-              <div className="w-80 h-auto lg:w-96">
-                <video
-                  src={data.heroImage.value[0].url}
-                  autoPlay={true}
-                  loop={true}
-                  muted={true}
-                  className="w-full h-auto"
-                />
-              </div>
-            )
-          ) : (
-            <div className="w-80 h-80 lg:w-96 lg:h-96 bg-gray-300 flex items-center justify-center">
-              <span className="text-gray-500 text-lg">No image</span>
-            </div>
-          )}
-      </div>
+        <div
+          id="cpage-hero-title-container"
+          className="bottom-330"
+          style={{
+            backgroundColor: 'transparent',
+            display: 'block',
+            position: 'absolute',
+            textAlign: 'left',
+            padding: '15px 30px 5px 30px',
+            bottom: '330px',
 
-      {/* Content - Right Side */}
-      <div className="lg:basis-1/2 flex flex-col items-center lg:items-start gap-6 text-center lg:text-left">
-        <h1 className="text-white font-sans text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight"
-          {...createItemSmartLink(data.itemId)}
-          {...createElementSmartLink("headline")}
+          }}
         >
-          {data.headline?.value}
-        </h1>
-        
-        {data.subheadline?.value && (
-          <p className="text-white font-sans text-xl lg:text-2xl leading-relaxed"
+          <h1 className="text-white font-sans text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight uppercase"
             {...createItemSmartLink(data.itemId)}
-            {...createElementSmartLink("subheadline")}
+            {...createElementSmartLink("headline")}
           >
-            {data.subheadline.value}
-          </p>
-        )}
-        
-        {buttonLink && buttonText && (
-          <div className="mt-4">
-            <ButtonLink href={buttonLink} style="transparent">
-              <span className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 px-6 rounded-lg transition-colors duration-200">
-                {buttonText}
-              </span>
-            </ButtonLink>
-          </div>
-        )}
+            {data.headline?.value}
+          </h1>
+
+
+
+
+        </div>
       </div>
     </div>
   );

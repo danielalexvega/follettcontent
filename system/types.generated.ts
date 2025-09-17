@@ -5,9 +5,9 @@
  *  
  * -------------------------------------------------------------------------------
  * 
- * Project: BCBSA 🏥 🔵
+ * Project: Follett Content
  * Environment: Production
- * Id: 9da2775f-eede-00c1-d7ce-96bf2cae2fed
+ * Id: 0537e98b-379f-0050-5134-9e8d9c775098
  * 
  * -------------------------------------------------------------------------------
  */
@@ -18,16 +18,20 @@ import type { LandingPageType } from '../types/landing-page-type.generated.js';
 import type { ServiceType } from '../types/service-type.generated.js';
 import type { CallToActionType } from '../types/call-to-action-type.generated.js';
 import type { PageType } from '../types/page-type.generated.js';
+import type { CTACardType } from '../types/cta-card-type.generated.js';
+import type { TopBannerAdType } from '../types/top-banner-ad-type.generated.js';
 import type { EventType } from '../types/event-type.generated.js';
 import type { PersonType } from '../types/person-type.generated.js';
 import type { VideoType } from '../types/video-type.generated.js';
+import type { WebinarType } from '../types/webinar-type.generated.js';
 import type { DisclaimerType } from '../types/disclaimer-type.generated.js';
 import type { ArticleType } from '../types/article-type.generated.js';
+import type { BookType } from '../types/book-type.generated.js';
 
             /*
 * Array of all type codenames
 */
-            export const typeCodenames = ['blog_post', 'landing_page', 'service', 'call_to_action', 'page', 'event', 'person', 'video', 'disclaimer', 'article'] as const;;
+            export const typeCodenames = ['blog_post', 'landing_page', 'service', 'call_to_action', 'page', 'cta_card', 'top_banner_ad', 'event', 'person', 'video', 'webinar', 'disclaimer', 'article', 'book'] as const;;
            
             /*
 * Type representing all type codenames
@@ -44,7 +48,7 @@ import type { ArticleType } from '../types/article-type.generated.js';
 					 /*
 * Core content type with narrowed types. Use this instead of'IContentItem' for increased type safety.
 */
-					 export type CoreType = BlogPostType | LandingPageType | ServiceType | CallToActionType | PageType | EventType | PersonType | VideoType | DisclaimerType | ArticleType
+					 export type CoreType = BlogPostType | LandingPageType | ServiceType | CallToActionType | PageType | CTACardType | TopBannerAdType | EventType | PersonType | VideoType | WebinarType | DisclaimerType | ArticleType | BookType
 
 					/*
 * Type mapping for codename & type. Can be used for type safe access to type based on the codename of type.
@@ -55,11 +59,15 @@ readonly landing_page: LandingPageType,
 readonly service: ServiceType,
 readonly call_to_action: CallToActionType,
 readonly page: PageType,
+readonly cta_card: CTACardType,
+readonly top_banner_ad: TopBannerAdType,
 readonly event: EventType,
 readonly person: PersonType,
 readonly video: VideoType,
+readonly webinar: WebinarType,
 readonly disclaimer: DisclaimerType,
 readonly article: ArticleType,
+readonly book: BookType,
 };
 
 					/*

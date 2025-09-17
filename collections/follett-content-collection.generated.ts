@@ -16,14 +16,14 @@
             import type { CollectionCodenames } from '../system/collections.generated.js';
            
             /*
-* Type representing codename of 'Common' collection
+* Type representing codename of 'Follett Content' collection
 */
-            export type CommonCollectionCodename = keyof Pick<Record<CollectionCodenames, null>, "default">;
+            export type FollettContentCollectionCodename = keyof Pick<Record<CollectionCodenames, null>, "academic_content">;
 
             /*
-* Typeguard for codename of 'Common' collection
+* Typeguard for codename of 'Follett Content' collection
 */
-            export function isCommonCollectionCodename(value: string | undefined | null): value is CommonCollectionCodename {
-                return typeof value === 'string' && value === ('default' satisfies CommonCollectionCodename);
+            export function isFollettContentCollectionCodename(value: string | undefined | null): value is FollettContentCollectionCodename {
+                return typeof value === 'string' && value === ('academic_content' satisfies FollettContentCollectionCodename);
             }
             

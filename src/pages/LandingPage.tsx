@@ -121,7 +121,7 @@ const LandingPage: FC = () => {
 
   return (
     <div className="flex-grow">
-      <PageSection color="bg-bcbsablue">
+      <PageSection color="bg-white">
         <HeroImage
           data={{
             headline: landingPage.elements.headline,

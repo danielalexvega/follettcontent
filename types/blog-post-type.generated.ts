@@ -5,9 +5,9 @@
  *  
  * -------------------------------------------------------------------------------
  * 
- * Project: BCBSA 🏥 🔵
+ * Project: Follett Content
  * Environment: Production
- * Id: 9da2775f-eede-00c1-d7ce-96bf2cae2fed
+ * Id: 0537e98b-379f-0050-5134-9e8d9c775098
  * 
  * -------------------------------------------------------------------------------
  */
@@ -15,10 +15,13 @@
 
             import type { TypeCodenames } from '../system/types.generated.js';
 import type { Elements, IContentItem } from '@kontent-ai/delivery-sdk';
+import type { AudienceTaxonomyTermCodenames, AudienceTaxonomyCodename } from '../taxonomies/audience-taxonomy.generated.js';
 import type { CollectionCodenames } from '../system/collections.generated.js';
 import type { CoreType } from '../system/types.generated.js';
 import type { LanguageCodenames } from '../system/languages.generated.js';
 import type { MetadataSnippet } from '../snippets/metadata-snippet.generated.js';
+import type { OfferingsTaxonomyTermCodenames, OfferingsTaxonomyCodename } from '../taxonomies/offerings-taxonomy.generated.js';
+import type { TopicTaxonomyTermCodenames, TopicTaxonomyCodename } from '../taxonomies/topic-taxonomy.generated.js';
 import type { WorkflowCodenames, WorkflowStepCodenames } from '../system/workflows.generated.js';
            
             /*
@@ -72,6 +75,39 @@ export type BlogPostType = IContentItem<
                 readonly body: Elements.RichTextElement<CoreType>;
 
 /*
+    * Offerings
+    *
+    * Codename: offerings
+* Id: 11ec753e-3b16-4407-bca5-f93d60650aca
+* Type: taxonomy
+* Required: false
+* Taxonomy: offerings
+    */
+                readonly offerings: Elements.TaxonomyElement<OfferingsTaxonomyTermCodenames, OfferingsTaxonomyCodename>;
+
+/*
+    * Topic
+    *
+    * Codename: topic
+* Id: 20014062-2dd5-4d2b-924d-d85b3b7e76da
+* Type: taxonomy
+* Required: false
+* Taxonomy: topic
+    */
+                readonly topic: Elements.TaxonomyElement<TopicTaxonomyTermCodenames, TopicTaxonomyCodename>;
+
+/*
+    * Audience
+    *
+    * Codename: audience
+* Id: e32a5bbb-bee7-41b9-9948-733d04f58590
+* Type: taxonomy
+* Required: false
+* Taxonomy: audience
+    */
+                readonly audience: Elements.TaxonomyElement<AudienceTaxonomyTermCodenames, AudienceTaxonomyCodename>;
+
+/*
     * URL slug
     *
     * Codename: url_slug
@@ -85,7 +121,7 @@ BlogPostTypeCodename, LanguageCodenames, CollectionCodenames, WorkflowCodenames,
 /*
 * Type representing all available element codenames for Blog Post
 */
-export type BlogPostTypeElementCodenames = 'title' | 'image' | 'body' | 'metadata__title' | 'metadata__keywords' | 'metadata__description' | 'url_slug';;
+export type BlogPostTypeElementCodenames = 'title' | 'image' | 'body' | 'offerings' | 'topic' | 'audience' | 'metadata__title' | 'metadata__keywords' | 'metadata__description' | 'url_slug';;
 
 /*
     * Type guard for Blog Post

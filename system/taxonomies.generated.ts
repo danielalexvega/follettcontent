@@ -5,9 +5,9 @@
  *  
  * -------------------------------------------------------------------------------
  * 
- * Project: BCBSA 🏥 🔵
+ * Project: Follett Content
  * Environment: Production
- * Id: 9da2775f-eede-00c1-d7ce-96bf2cae2fed
+ * Id: 0537e98b-379f-0050-5134-9e8d9c775098
  * 
  * -------------------------------------------------------------------------------
  */
@@ -17,7 +17,7 @@
             /*
 * Array of all taxonomy codenames
 */
-            export const taxonomyCodenames = ['general_healthcare_topics', 'article_type', 'medical_specialties', 'event_type', 'event_topic'] as const;;
+            export const taxonomyCodenames = ['general_healthcare_topics', 'article_type', 'medical_specialties', 'book_audience', 'offerings', 'topic', 'event_type', 'event_topic', 'audience', 'book_classification'] as const;;
            
             /*
 * Type representing all taxonomy codenames

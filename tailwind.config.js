@@ -9,7 +9,7 @@ export default {
     extend: {
       colors: {
         burgundy: "#993265",
-        bcbsablue: "#0066cd",
+        follettblue: "#00529b",
         azure: "#009edb",
         white: '#ffffff',
         grey: {
@@ -59,8 +59,8 @@ export default {
 
     },
       fontFamily: {
-        sans: ['"Source Sans 3"', 'Arial', 'sans-serif'],
-        libre: ['"Abhaya Libre"', "Arial"]
+        sans: ['Roboto', 'Rubik', '"Libre Franklin"', 'sans-serif'],
+        libre: ['Roboto', 'Rubik', '"Libre Franklin"', 'sans-serif']
       }
     },
     container: {

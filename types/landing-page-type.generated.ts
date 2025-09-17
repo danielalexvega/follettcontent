@@ -5,9 +5,9 @@
  *  
  * -------------------------------------------------------------------------------
  * 
- * Project: BCBSA 🏥 🔵
+ * Project: Follett Content
  * Environment: Production
- * Id: 9da2775f-eede-00c1-d7ce-96bf2cae2fed
+ * Id: 0537e98b-379f-0050-5134-9e8d9c775098
  * 
  * -------------------------------------------------------------------------------
  */
@@ -67,27 +67,6 @@ export type LandingPageType = IContentItem<
                 readonly subheadline: Elements.TextElement;
 
 /*
-    * Button Label
-    *
-    * Codename: button_label
-* Id: 9da3b6b5-2b46-4a14-8941-3d93a732a528
-* Type: text
-* Required: false
-    */
-                readonly button_label: Elements.TextElement;
-
-/*
-    * Button Link
-    *
-    * Codename: button_link
-* Id: 8cf20a29-26d3-487b-babf-6cf1344ade9d
-* Type: modular_content
-* Required: false
-* Allowed content types: page
-    */
-                readonly button_link: Elements.LinkedItemsElement<PageType>;
-
-/*
     * Hero Image
     *
     * Codename: hero_image
@@ -134,7 +113,7 @@ LandingPageTypeCodename, LanguageCodenames, CollectionCodenames, WorkflowCodenam
 /*
 * Type representing all available element codenames for Landing Page
 */
-export type LandingPageTypeElementCodenames = 'headline' | 'subheadline' | 'button_label' | 'button_link' | 'hero_image' | 'body_copy' | 'featured_content' | 'subpages';;
+export type LandingPageTypeElementCodenames = 'headline' | 'subheadline' | 'hero_image' | 'body_copy' | 'featured_content' | 'subpages';;
 
 /*
     * Type guard for Landing Page

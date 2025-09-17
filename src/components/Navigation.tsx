@@ -46,20 +46,44 @@ const Navigation: FC = () => {
     <li key={name}>
       <NavLink 
         to={createPreviewLink(link, isPreview)} 
-        className="text-white font-bold text-base hover:text-blue-200 transition-colors duration-200"
+        className="text-black text-base hover:text-follettblue transition-colors duration-200"
       >
         {name}
       </NavLink>
     </li>
   );
 
+  // Fallback navigation items if CMS data is not available
+  const fallbackNavItems = [
+    { name: "Titlewave Bookstore", link: "/titlewave" },
+    { name: "Book eFairs", link: "/book-fairs" },
+    { name: "School Libraries", link: "/school-libraries" },
+    { name: "Classroom & Curriculum", link: "/classroom" },
+    { name: "K12 Resources", link: "/k12-resources" },
+    { name: "Contact Us", link: "/contact" },
+  ];
+
+  const navItems = navigation.data && navigation.data.length > 0 ? navigation.data : fallbackNavItems;
+
   return (
-    <nav>
-      <menu className="flex flex-wrap gap-8 items-center list-none">
-        {
-          navigation.data?.map(({ name, link }) => createMenuLink(name, link))
-        }
-      </menu>
+    <nav className="bg-transparent rounded-[50px] px-6 py-4 flex items-center justify-between">
+      {/* Logo */}
+      <div className="flex items-center">
+        <img 
+          src="/Follett-Content-white.png" 
+          alt="Follett Content"
+          className="h-8 w-auto"
+        />
+      </div>
+
+      {/* Navigation Items Container */}
+      <div>
+        <menu className="flex flex-wrap gap-8 items-center list-none bg-white p-4 rounded-[50px] text-black">
+          {
+            navItems.map(({ name, link }) => createMenuLink(name, link))
+          }
+        </menu>
+      </div>
     </nav>
   );
 };

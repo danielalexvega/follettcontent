@@ -5,9 +5,9 @@
  *  
  * -------------------------------------------------------------------------------
  * 
- * Project: BCBSA 🏥 🔵
+ * Project: Follett Content
  * Environment: Production
- * Id: 9da2775f-eede-00c1-d7ce-96bf2cae2fed
+ * Id: 0537e98b-379f-0050-5134-9e8d9c775098
  * 
  * -------------------------------------------------------------------------------
  */
@@ -17,7 +17,7 @@
             /*
 * Array of all element codenames
 */
-            export const elementCodenames = ['title', 'image', 'body', 'metadata__title', 'metadata__keywords', 'metadata__description', 'url_slug', 'headline', 'subheadline', 'button_label', 'button_link', 'hero_image', 'body_copy', 'featured_content', 'subpages', 'name', 'summary', 'description', 'team', 'medical_specialties', 'image_position', 'url', 'start_date', 'end_date', 'event_type', 'event_topic', 'first_name', 'last_name', 'prefix', 'suffixes', 'biography', 'job_title', 'phone', 'email', 'website', 'video_link', 'caption', 'autoplay', 'type', 'publish_date', 'introduction', 'author', 'article_type', 'topics', 'related_articles'] as const;;
+            export const elementCodenames = ['title', 'image', 'body', 'offerings', 'topic', 'audience', 'metadata__title', 'metadata__keywords', 'metadata__description', 'url_slug', 'headline', 'subheadline', 'hero_image', 'body_copy', 'featured_content', 'subpages', 'name', 'summary', 'description', 'team', 'medical_specialties', 'image_position', 'button_label', 'button_link', 'url', 'link_text', 'page_link', 'outside_url', 'audience__audience', 'audience__offerings', 'url_link', 'start_date', 'end_date', 'event_type', 'event_topic', 'first_name', 'last_name', 'prefix', 'suffixes', 'biography', 'job_title', 'phone', 'email', 'website', 'video_link', 'caption', 'autoplay', 'webinar_description', 'registration_link', 'webinar_date_and_time', 'type', 'publish_date', 'introduction', 'author', 'article_type', 'topics', 'related_articles', 'book_overview', 'cover', 'page_count', 'book_audience', 'book_classification'] as const;;
            
             /*
 * Type representing all element codenames

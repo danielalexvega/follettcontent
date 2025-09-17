@@ -5,9 +5,9 @@
  *  
  * -------------------------------------------------------------------------------
  * 
- * Project: BCBSA 🏥 🔵
+ * Project: Follett Content
  * Environment: Production
- * Id: 9da2775f-eede-00c1-d7ce-96bf2cae2fed
+ * Id: 0537e98b-379f-0050-5134-9e8d9c775098
  * 
  * -------------------------------------------------------------------------------
  */
@@ -97,7 +97,7 @@ export type CallToActionType = IContentItem<
     * Codename: button_link
 * Id: 1872121b-6166-451e-8c26-9c78f2cfba47
 * Type: modular_content
-* Required: true
+* Required: false
 * Allowed content types: page
     */
                 readonly button_link: Elements.LinkedItemsElement<PageType>;}, 

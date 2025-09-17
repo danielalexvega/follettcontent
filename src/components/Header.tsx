@@ -1,62 +1,46 @@
-import { useLocation, useSearchParams } from "react-router-dom";
-import IconSpain from "../icons/IconSpain";
-import IconUnitedStates from "../icons/IconUnitedStates";
-import Container from "./Container";
-import Logo from "./Logo";
-import Navigation from "./Navigation";
-import { IconButton } from "../icons/IconButton";
+"use client";
+import { useEffect, useState } from "react";
 
-const Header: React.FC = () => {
-  const location = useLocation();
-  const isResearchPage = location.pathname.match(/^\/research\/[\w-]+$/);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const lang = searchParams.get("lang");
+
+import Navigation from "./Navigation";
+import Container from "./Container";
+
+
+export default function Header() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 200) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
 
   return (
-    <header className="bg-white">
-      {/* Top section - Logo area */}
+    <header className="bg-[#04559e]">
       <Container>
-        <div className="py-4 flex items-center justify-between">
-          <div className="flex items-center">
-            <Logo />
+        <div className="max-w-[1450px] mx-auto px-4 py-6">
+          <div className="flex justify-center items-center">
+            <img
+              src="/homepagead.jpeg"
+              alt="AS LOW AS $10.99! PREORDER BEFORE OCTOBER 20. Diary of a Wimpy Kid Party Pooper and Dog Man Big Jim Believes"
+              className="max-w-[970px] w-full h-auto"
+            />
           </div>
-          {isResearchPage && (
-            <div className="flex gap-2 items-center">
-              <IconButton
-                icon={
-                  <IconUnitedStates
-                    className={`hover:cursor-pointer hover:scale-110`}
-                  />
-                }
-                isSelected={lang === "en-US" || lang === null}
-                onClick={() =>
-                  setSearchParams(prev => {
-                    prev.delete("lang");
-                    return prev;
-                  })}
-              />
-              <IconButton
-                icon={
-                  <IconSpain
-                    className={`hover:cursor-pointer hover:scale-110`}
-                  />
-                }
-                isSelected={lang === "es-ES"}
-                onClick={() => {
-                  setSearchParams(prev => {
-                    prev.set("lang", "es-ES");
-                    return prev;
-                  });
-                }}
-              />
-            </div>
-          )}
         </div>
       </Container>
-      
+
       {/* Bottom section - Navigation bar */}
-      <div className="bg-[#004f87]">
-        <Container>
+      <div className="bg-transparent">
+        <Container className={`max-w-[1420px] fixed z-50 transition-all duration-300 left-0 right-0 
+          ${scrolled ? "top-[43px]" : "top-[164px]"}`}>
           <div className="py-3">
             <Navigation />
           </div>
@@ -65,5 +49,3 @@ const Header: React.FC = () => {
     </header>
   );
 };
-
-export default Header;
