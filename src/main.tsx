@@ -16,6 +16,7 @@ import PersonDetailPage from "./pages/PersonDetailPage.tsx";
 import { ErrorBoundary } from "react-error-boundary";
 import Loader from "./components/Loader.tsx";
 import Page from "./pages/Page.tsx";
+import CTACardDetail from "./pages/CTACardDetail.tsx";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +65,10 @@ const BaseRouting: RouteObject[] = [
     path: "*",
     Component: NotFound,
   },
+  {
+    path: "cta-card/:slug",
+    Component: CTACardDetail,
+  }
 ];
 
 const router = createBrowserRouter([
