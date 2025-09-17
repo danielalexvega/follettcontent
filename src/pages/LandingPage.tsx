@@ -3,6 +3,7 @@ import { DeliveryError } from "@kontent-ai/delivery-sdk";
 import HeroImage from "../components/HeroImage";
 import PageContent from "../components/PageContent";
 import PageSection from "../components/PageSection";
+import Container from "../components/Container";
 // import CTACardComponent from "../components/CTACard";
 import "../index.css";
 import { LanguageCodenames } from "../model";
@@ -136,6 +137,7 @@ const LandingPage: FC = () => {
           }}
         />
       </PageSection>
+      <Container className="w-3/4 bottom-[200px] relative bg-white rounded-lg">
       <PageSection color="bg-white">
         <PageContent body={landingPage.elements.body_copy!} itemId={landingPage.system.id} elementName="body_copy" />
       </PageSection>
@@ -145,6 +147,8 @@ const LandingPage: FC = () => {
         homepage_cta_cards: landingPage.elements.homepage_cta_cards?.linkedItems,
         webinars: landingPage.elements.webinars?.linkedItems
       }} />
+      </Container>
+      
     </div>
   );
 };
