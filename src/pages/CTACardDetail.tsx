@@ -113,7 +113,7 @@ const CTACardDetail: FC = () => {
   }
 
   return (
-    <div className="flex-grow">
+    <div className="flex-grow mt-[150px]">
       <PageSection color="bg-white">
         <CTACardComponent
           data={{
